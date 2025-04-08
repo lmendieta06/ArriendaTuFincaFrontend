@@ -1,0 +1,5 @@
+export enum TipoCalificacion {
+    PROPIEDAD = 'PROPIEDAD',
+    ARRENDATARIO = 'ARRENDATARIO',
+    ARRENDADOR = 'ARRENDADOR'
+}

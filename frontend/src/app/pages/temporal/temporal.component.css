@@ -1,0 +1,13 @@
+.container-buttons {
+    margin-top: 20px;
+    width: 100%
+}
+
+.buttons-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+
