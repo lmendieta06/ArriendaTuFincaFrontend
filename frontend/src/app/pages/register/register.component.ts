@@ -28,26 +28,40 @@ export class RegisterComponent {
   onPasswordChange(): void {
     this.passwordError = false;
   }
-
+  
   async onSubmit(form: NgForm): Promise<void> {
     console.log('Formulario enviado, estado:', form.valid);
     console.log('Valores del formulario:', form.value);
+
     if (this.usuario.password.length < 8 || this.usuario.password.includes(' ')) {
       this.passwordError = true;
       return;
     }
-    
+
     if (form.valid) {
       try {
-        console.log('Enviando datos al backend...', this.usuario);
-        const usuarioCreado = await this.registerService.createUsuario(this.usuario);
+        // Preparamos el objeto que se enviará al backend
+        const payload = {
+          nombre: this.usuario.nombre,
+          email: this.usuario.email,
+          telefono: this.usuario.telefono,
+          password: this.usuario.password,
+          tipoUsuario: this.usuario.arrendar ? 'ARRENDATARIO' : 'ARRENDADOR'
+        };
+
+        console.log('Enviando datos al backend...', payload);
+        const usuarioCreado = await this.registerService.createUsuario(payload);
         console.log('Usuario creado exitosamente:', usuarioCreado);
 
-        // Redirigir a login o donde quieras
-        // this.router.navigate(['/inicio']);
+        if(usuarioCreado.tipoUsuario === "ARRENDATARIO"){
+          this.router.navigate(['/home-arrendatario'])
+        }else if(usuarioCreado.tipoUsuario === "ARRENDADOR"){
+          // Temporal
+          this.router.navigate(['/inicio']);
+        }
+
       } catch (error) {
         console.error('Error creando el usuario:', error);
-        // Aquí podrías mostrar una alerta o mensaje en pantalla
       }
     }
   }

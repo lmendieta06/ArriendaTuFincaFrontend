@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
 })
 export class RegisterService {
 
-  private apiUrl = `http://localhost:8082/api/usuarios`;
+  private apiUrl = `http://localhost:8082/api/usuarios/registrar`;
 
   async createUsuario(usuario: any) {
     try {
