@@ -1,1 +1,44 @@
-<p>nav-arrendatario works!</p>
+<div class="sidebar">
+  <!-- Perfil del usuario -->
+  <div class="user-profile">
+    <div class="avatar">
+      <span>J</span>
+    </div>
+    <div class="user-info">
+      <h3>Juan Pérez</h3>
+      <p>Arrendatario</p>
+    </div>
+  </div>
+
+  <!-- Menú de navegación -->
+  <nav class="navigation">
+    <ul>
+      <li [routerLinkActive]="'active'">
+        <a routerLink='/home-arrendatario'>
+          <i class="material-icons">dashboard</i>
+          <span>Panel Principal</span>
+        </a>
+      </li>
+      <li [routerLinkActive]="'active'">
+        <a routerLink='/home-arrendatario/mis-propiedades'>
+          <i class="material-icons">home</i>
+          <span>Mis Propiedades</span>
+        </a>
+      </li>
+      <li [routerLinkActive]="'active'">
+        <a routerLink='/home-arrendatario/solicitudes'>
+          <i class="material-icons">description</i>
+          <span>Solicitudes</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Cerrar sesión -->
+  <div class="logout">
+    <a [routerLink]="['/login']">
+      <i class="material-icons">exit_to_app</i>
+      <span>Cerrar Sesión</span>
+    </a>
+  </div>
+</div>

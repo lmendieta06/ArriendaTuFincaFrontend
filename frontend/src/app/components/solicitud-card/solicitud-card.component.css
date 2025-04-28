@@ -1,0 +1,221 @@
+.request-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Información de la propiedad */
+  .property-info {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    position: relative;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .property-image {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    margin-right: 15px;
+    flex-shrink: 0;
+  }
+  
+  /* Colores para diferentes propiedades */
+  .property-f1 {
+    background-color: #CD853F;
+  }
+  
+  .property-f2 {
+    background-color: #CD853F;
+  }
+  
+  .property-f3 {
+    background-color: #CD853F;
+  }
+  
+  .property-details {
+    flex: 1;
+  }
+  
+  .property-details h3 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .property-location {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #9e4a36;
+  }
+  
+  .location-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #9e4a36;
+    margin-right: 6px;
+  }
+  
+  .status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .status-pending {
+    background-color: #fff7e0;
+    color: #e6a23c;
+  }
+  
+  .status-approved {
+    background-color: #e8f8ed;
+    color: #4caf50;
+  }
+  
+  .status-rejected {
+    background-color: #ffe8e8;
+    color: #f44336;
+  }
+  
+  .status-completed {
+    background-color: #e8f4ff;
+    color: #2196f3;
+  }
+  
+  /* Información de la solicitud */
+  .request-details {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .detail-group {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 15px;
+  }
+  
+  .detail-label {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 5px;
+  }
+  
+  .detail-value {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .guest {
+    display: flex;
+    align-items: center;
+  }
+  
+  .guest-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 8px;
+  }
+  
+  .amount {
+    font-weight: 500;
+  }
+  
+  /* Pie de la tarjeta */
+  .request-footer {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    justify-content: space-between;
+  }
+  
+  .request-id {
+    font-size: 13px;
+    color: #999;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-right: 10px;
+  }
+  
+  .approve-btn, .reject-btn, .details-btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .approve-btn {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .reject-btn {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .details-btn {
+    background-color: white;
+    color: #666;
+    border: 1px solid #ddd;
+  }
+  
+  .approve-btn:hover {
+    background-color: #3d8b40;
+  }
+  
+  .reject-btn:hover {
+    background-color: #d32f2f;
+  }
+  
+  .details-btn:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .request-details {
+      flex-direction: column;
+    }
+    
+    .detail-group {
+      width: 100%;
+    }
+    
+    .request-footer {
+      flex-wrap: wrap;
+    }
+    
+    .request-id {
+      margin-bottom: 10px;
+      width: 100%;
+    }
+    
+    .action-buttons {
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+}

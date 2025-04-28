@@ -1,0 +1,124 @@
+<div class="dashboard-content">
+    <div class="requests-header">
+      <h2>Solicitudes de Arriendo</h2>
+      <p>Gestiona las solicitudes de arriendo para tus propiedades</p>
+    </div>
+    
+    <!-- Tarjetas de resumen -->
+    <div class="summary-cards">
+      <div class="summary-card pending">
+        <div class="icon-container">
+          <i class="material-icons">hourglass_empty</i>
+        </div>
+        <div class="number">5</div>
+        <div class="label">Pendientes</div>
+      </div>
+      
+      <div class="summary-card approved">
+        <div class="icon-container">
+          <i class="material-icons">check_circle</i>
+        </div>
+        <div class="number">12</div>
+        <div class="label">Aprobadas</div>
+      </div>
+      
+      <div class="summary-card rejected">
+        <div class="icon-container">
+          <i class="material-icons">cancel</i>
+        </div>
+        <div class="number">3</div>
+        <div class="label">Rechazadas</div>
+      </div>
+      
+      <div class="summary-card completed">
+        <div class="icon-container">
+          <i class="material-icons">verified_user</i>
+        </div>
+        <div class="number">28</div>
+        <div class="label">Completadas</div>
+      </div>
+    </div>
+    
+    <!-- Filtros -->
+    <div class="filters-container">
+      <div class="filter-group">
+        <label>Propiedad</label>
+        <select class="filter-select">
+          <option value="all">Todas las propiedades</option>
+          <option value="finca1">Finca El Paraíso</option>
+          <option value="finca2">Finca Los Rosales</option>
+          <option value="finca3">Hacienda Santa Clara</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label>Estado</label>
+        <select class="filter-select">
+          <option value="all">Todos los estados</option>
+          <option value="pending">Pendientes</option>
+          <option value="approved">Aprobadas</option>
+          <option value="rejected">Rechazadas</option>
+          <option value="completed">Completadas</option>
+        </select>
+      </div>
+      
+      <div class="filter-group date">
+        <label>Fecha de inicio</label>
+        <input type="date" class="date-input">
+      </div>
+      
+      <div class="filter-group date">
+        <label>Fecha de fin</label>
+        <input type="date" class="date-input">
+      </div>
+      
+      <button class="filter-btn">Filtrar</button>
+    </div>
+    
+    <!-- Tabs de estados -->
+    <div class="tabs-container">
+      <div class="tab active">
+        <span>Todas (48)</span>
+      </div>
+      <div class="tab">
+        <span>Pendientes (5)</span>
+      </div>
+      <div class="tab">
+        <span>Aprobadas (12)</span>
+      </div>
+      <div class="tab">
+        <span>Rechazadas (3)</span>
+      </div>
+      <div class="tab">
+        <span>Completadas (28)</span>
+      </div>
+    </div>
+    
+    <!-- Lista de solicitudes -->
+    <div class="requests-list">
+      <!-- Componente de tarjeta de solicitud - Pendiente -->
+      <app-solicitud-card *ngFor="let solicitud of solicitudes"
+        [propertyId]="solicitud.propertyId"
+        [propertyName]="solicitud.propertyName"
+        [propertyLocation]="solicitud.propertyLocation"
+        [guestInitials]="solicitud.guestInitials"
+        [guestName]="solicitud.guestName"
+        [checkIn]="solicitud.checkIn"
+        [checkOut]="solicitud.checkOut"
+        [totalAmount]="solicitud.totalAmount"
+        [requestId]="solicitud.requestId"
+        [status]="solicitud.status"
+        [showActions]="solicitud.showActions">
+      </app-solicitud-card>
+      
+    </div>
+    
+    <!-- Paginación -->
+    <div class="pagination">
+      <a href="#" class="page-link">&lt;</a>
+      <a href="#" class="page-link active">1</a>
+      <a href="#" class="page-link">2</a>
+      <a href="#" class="page-link">3</a>
+      <a href="#" class="page-link">&gt;</a>
+    </div>
+  </div>

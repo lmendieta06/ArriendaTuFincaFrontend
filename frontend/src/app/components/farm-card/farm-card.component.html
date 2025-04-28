@@ -1,0 +1,13 @@
+<div class="farm-card">
+    <div class="farm-image" [ngStyle]="{'background-color': '#EFB810'}">
+      <span>Finca {{ imageNumber }}</span>
+    </div>
+    <div class="farm-details">
+      <h3>{{ farmName }}</h3>
+      <p class="farm-description">{{ description }}</p>
+      <div class="farm-actions">
+        <span class="status-badge">{{ status }}</span>
+        <button class="manage-btn">Gestionar</button>
+      </div>
+    </div>
+</div>

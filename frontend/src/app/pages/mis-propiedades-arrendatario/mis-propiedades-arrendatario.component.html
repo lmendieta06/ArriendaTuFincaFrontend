@@ -1,0 +1,89 @@
+<div class="dashboard-container">    
+    <!-- Contenido principal -->
+    <div class="main-content">      
+      <!-- Contenido de propiedades -->
+      <div class="dashboard-content">
+        <div class="properties-header">
+          <h2>Mis Propiedades</h2>
+          <p>Gestiona todas tus propiedades registradas en el sistema</p>
+        </div>
+        
+        <!-- Resumen de propiedades -->
+        <div class="properties-summary">
+          <div class="summary-card">
+            <div class="summary-value">5</div>
+            <div class="summary-label">Total Propiedades</div>
+          </div>
+          
+          <div class="summary-card">
+            <div class="summary-value">3</div>
+            <div class="summary-label">Disponibles</div>
+          </div>
+          
+          <div class="summary-card">
+            <div class="summary-value">2</div>
+            <div class="summary-label">No Disponibles</div>
+          </div>
+          
+          <div class="summary-card">
+            <div class="summary-value">4.8</div>
+            <div class="summary-label">Calificación Media</div>
+          </div>
+        </div>
+        
+        <!-- Filtros de búsqueda -->
+        <div class="search-filters">
+          <div class="search-box">
+            <i class="material-icons search-icon">search</i>
+            <input type="text" placeholder="Buscar por nombre, ubicación...">
+          </div>
+          
+          <div class="filters">
+            <select class="filter-select">
+              <option value="">Estado</option>
+              <option value="disponible">Disponible</option>
+              <option value="no-disponible">No Disponible</option>
+            </select>
+            
+            <select class="filter-select">
+              <option value="">Departamento</option>
+              <option value="antioquia">Antioquia</option>
+              <option value="cundinamarca">Cundinamarca</option>
+              <option value="valle">Valle del Cauca</option>
+            </select>
+          </div>
+          
+          <button class="add-property-btn">
+            <i class="material-icons">add</i>
+            Añade Propiedad
+          </button>
+        </div>
+        
+        <!-- Lista de propiedades -->
+        <div class="property-grid">
+          <!-- Componentes de tarjeta de propiedad -->
+          <app-propiedad-card  *ngFor="let propiedad of properties"
+            [name]="propiedad.name"
+            [location]="propiedad.location"
+            [price]="propiedad.price"
+            [description]="propiedad.description"
+            [capacity]="propiedad.capacity"
+            [rating]="propiedad.rating"
+            [reservations]="propiedad.reservations"
+            [status]="propiedad.status"
+            [amenities]="propiedad.amenities"
+            [imageNumber]="propiedad.imageNumber">
+          </app-propiedad-card >
+        </div>
+        
+        <!-- Paginación -->
+        <div class="pagination">
+          <a href="#" class="page-link">&lt;</a>
+          <a href="#" class="page-link active">1</a>
+          <a href="#" class="page-link">2</a>
+          <a href="#" class="page-link">3</a>
+          <a href="#" class="page-link">&gt;</a>
+        </div>
+      </div>
+    </div>
+  </div>
