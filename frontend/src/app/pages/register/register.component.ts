@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RegisterService } from '../../services/register_services/register.service';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -10,7 +11,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  // Modelo para el formulario
+  constructor(private registerService: RegisterService, private router: Router) {}
+  console = console;
+
   usuario = {
     nombre: '',
     apellido: '',
@@ -19,26 +22,33 @@ export class RegisterComponent {
     password: '',
     arrendar: false
   };
-  
-  // Variable para controlar el error de contraseña
+
   passwordError: boolean = false;
-  
-  // Limpia el error cuando el usuario edita la contraseña
+
   onPasswordChange(): void {
     this.passwordError = false;
   }
-  
-  // Maneja el envío del formulario
-  onSubmit(form: NgForm): void {
-    // Valida la contraseña (mínimo 8 caracteres sin espacios)
+
+  async onSubmit(form: NgForm): Promise<void> {
+    console.log('Formulario enviado, estado:', form.valid);
+    console.log('Valores del formulario:', form.value);
     if (this.usuario.password.length < 8 || this.usuario.password.includes(' ')) {
       this.passwordError = true;
       return;
     }
     
     if (form.valid) {
-      console.log('Formulario enviado:', this.usuario);
-      // Aquí puedes hacer la lógica para registrar al usuario
+      try {
+        console.log('Enviando datos al backend...', this.usuario);
+        const usuarioCreado = await this.registerService.createUsuario(this.usuario);
+        console.log('Usuario creado exitosamente:', usuarioCreado);
+
+        // Redirigir a login o donde quieras
+        // this.router.navigate(['/inicio']);
+      } catch (error) {
+        console.error('Error creando el usuario:', error);
+        // Aquí podrías mostrar una alerta o mensaje en pantalla
+      }
     }
   }
 }
