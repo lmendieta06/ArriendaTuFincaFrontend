@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
-import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
-import { TemporalComponent } from './pages/temporal/temporal.component';
+import { RegisterComponent } from './pages/register/register.component';
 export const routes: Routes = [
-  { path: '', component: LoginComponent },
-  { path: 'usuarios', component: UsuariosComponent },
-  { path: 'temporal', component: TemporalComponent },
+  { path: '', component: HomeComponent, title:"Arrienda Tu Finca" },
+  { path: 'inicio', component: LoginComponent, title:"Inicio" },
+  { path: 'registro', component: RegisterComponent, title:"Crea tu cuenta" },
+
+
 ];

@@ -1,0 +1,59 @@
+/* Estilos para el componente tarjeta de características */
+.feature-card {
+    background-color: var(--fondoBeige);
+    border-radius: 10px;
+    padding: 25px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    min-height: 300px;
+  }
+  
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+  }
+  
+  .feature-icon.variety {
+    background-color: var(--cafeOscuro);
+  }
+  
+  .feature-icon.simple {
+    background-color: #3498db;
+  }
+  
+  .feature-icon.secure {
+    background-color: #f1c40f;
+  }
+  
+  .feature-icon.payments {
+    background-color: #e74c3c;
+  }
+  
+  .feature-icon i {
+    font-size: 20px;
+  }
+  
+  .feature-card h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: var(--cafeClaro);
+  }
+  
+  .feature-card p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+    color: white;
+  }

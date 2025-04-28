@@ -1,0 +1,15 @@
+<!-- Componente de tarjeta de testimonio -->
+<div class="testimonial-card">
+    <div class="user-info">
+      <div class="user-avatar" [style.backgroundColor]="testimonial.avatarColor">
+        {{ testimonial.initials }}
+      </div>
+      <div class="user-details">
+        <h4>{{ testimonial.name }}</h4>
+        <div class="rating">
+          <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]" [ngClass]="{'filled': star <= testimonial.rating}"></i>
+        </div>
+      </div>
+    </div>
+    <p class="testimonial-text">{{ testimonial.comment }}</p>
+  </div>

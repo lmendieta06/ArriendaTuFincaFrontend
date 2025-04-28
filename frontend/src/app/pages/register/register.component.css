@@ -1,3 +1,4 @@
+
   /* Reset y estilos generales */
   * {
     margin: 0;
@@ -115,43 +116,85 @@
     font-weight: bold;
   }
   
-  .form-group {
+    /* Filas para inputs que van en pares */
+    .form-row {
+    display: flex;
+    gap: 15px;
     margin-bottom: 20px;
   }
   
+  /* Grupos de formulario */
+  .form-group {
+    flex: 1;
+    margin-bottom: 20px;
+  }
+  
+  /* Etiquetas */
   .form-group label {
     display: block;
     margin-bottom: 8px;
     color: var(--textoGris);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: normal;
   }
-
-  .form-group label:active{
-    color: var(--rojoBoton);
-  }
   
+  /* Campos de entrada */
   .form-group input {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px;
     border: 1px solid var(--bordeInput);
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 14px;
     background-color: var(--inputBackground);
   }
   
-  .forgot-password {
-    text-align: right;
+  /* Estilo para el checkbox */
+  .checkbox-group {
+    display: flex;
+    align-items: center;
     margin-bottom: 20px;
+  }
+  
+  .checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  .checkbox-group label {
+    color: var(--textoGris);
+    font-size: 14px;
+  }
+  
+  /* Botón de registro */
+  .signup-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--rojoBoton);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: normal;
+  }
+  
+  /* Estilos para mensajes de error */
+  .error-message {
+    color: #d93025;
+    font-size: 12px;
     margin-top: 5px;
+    display: none;
   }
   
-  .forgot-password a {
-    color: var(--rojoBoton);
-    font-size: 13px;
-    text-decoration: none;
+  .error .error-message {
+    display: block;
   }
   
+  .error input {
+    border-color: #d93025;
+  }
+
   .login-btn {
     width: 100%;
     padding: 10px 12px;

@@ -1,0 +1,86 @@
+/* Estilos para el componente tarjeta de opciones */
+.option-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .option-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #F5F5F5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  
+  .arrendatario .card-icon {
+    color: var(--cafeOscuro);
+  }
+  
+  .arrendador .card-icon {
+    color: #3498db;
+  }
+  
+  .card-icon i {
+    font-size: 24px;
+  }
+  
+  .option-card h3 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: var(--cafeClaro);
+  }
+  
+  .option-card p {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .card-button {
+    background-color: transparent;
+    color: var(--cafeOscuro);
+    border: 1px solid var(--cafeOscuro);
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .card-button:hover {
+    background-color: var(--cafeOscuro);
+    color: white;
+  }
+  
+  .arrendatario .card-button {
+    border-color: var(--cafeOscuro);
+    color: var(--cafeOscuro);
+  }
+  
+  .arrendador .card-button {
+    border-color: #3498db;
+    color: #3498db;
+  }
+  
+  .arrendatario .card-button:hover {
+    background-color: var(--cafeOscuro);
+    color: white;
+  }
+  
+  .arrendador .card-button:hover {
+    background-color: #3498db;
+    color: white;
+  }

@@ -1,0 +1,17 @@
+<!-- Componente de tarjeta de opciones -->
+<div class="option-card" [ngClass]="type">
+    <div class="card-icon">
+      <i *ngIf="type === 'arrendatario'" class="fa-solid fa-house"></i>
+      <i *ngIf="type === 'arrendador'" class="fa-solid fa-key"></i>
+    </div>
+    <h3 *ngIf="type === 'arrendatario'">Soy Arrendatario</h3>
+    <h3 *ngIf="type === 'arrendador'">Soy Arrendador</h3>
+    <p *ngIf="type === 'arrendatario'">
+      Puedes ver propiedades, alquilar tu finca de fin de semana, hacer reservaciones, mirar disponibilidad de una o varias fechas de tu gusto.
+    </p>
+    <p *ngIf="type === 'arrendador'">
+      Si tienes disponible un alquiler, casa o apartamento, o finca en cualquier parte del país, puedes registrarla para tu próximo cliente.
+    </p>
+    <button *ngIf="type === 'arrendatario'" class="card-button">Descubrir propiedades</button>
+    <button *ngIf="type === 'arrendador'" class="card-button">Enumerar finca</button>
+  </div>

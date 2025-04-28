@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ButtonTemporalComponent } from './button-temporal.component';
+import { FeatureCardComponent } from './feature-card.component';
 
-describe('ButtonTemporalComponent', () => {
-  let component: ButtonTemporalComponent;
-  let fixture: ComponentFixture<ButtonTemporalComponent>;
+describe('FeatureCardComponent', () => {
+  let component: FeatureCardComponent;
+  let fixture: ComponentFixture<FeatureCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ButtonTemporalComponent]
+      imports: [FeatureCardComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ButtonTemporalComponent);
+    fixture = TestBed.createComponent(FeatureCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

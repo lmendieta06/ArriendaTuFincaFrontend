@@ -1,0 +1,63 @@
+/* Estilos para el componente tarjeta de testimonio */
+.testimonial-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 25px;
+    width: 350px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    text-align: left;
+  }
+  
+  .testimonial-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    margin-right: 15px;
+  }
+  
+  .user-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-details h4 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+    color: var(--cafeClaro);
+  }
+  
+  .rating {
+    display: flex;
+  }
+  
+  .rating i {
+    color: #ddd;
+    margin-right: 3px;
+  }
+  
+  .rating i.filled {
+    color: #FFD700;
+  }
+  
+  .testimonial-text {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+    font-style: italic;
+  }

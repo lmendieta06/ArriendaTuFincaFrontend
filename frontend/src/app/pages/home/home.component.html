@@ -1,0 +1,125 @@
+<main>
+  <!-- Cabecera -->
+  <header>
+    <div class="logo-container">
+      <a routerLink=""><span class="logo-icon">A</span> ArriendaTuFinca</a>
+    </div>
+    <div class="auth-buttons">
+      <a class="btn-outline" routerLink="/inicio">Iniciar Sesión</a>
+      <a class="btn-solid" routerLink="/registro">Crear Cuenta</a>
+    </div>
+  </header>
+
+  <!-- Sección Hero -->
+  <section class="hero">
+    <h1>Arrienda Tu Finca</h1>
+    <p class="subtitle">La mejor plataforma para encontrar y reservar las propiedades más distintivas y mejor equipadas para disfrutar de momentos inolvidables.</p>
+    
+    <div class="search-container">
+      <input type="text" placeholder="Busca por ubicación, tipo de propiedad o características">
+      <button class="search-btn">Buscar</button>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-item">
+        <h2>500+</h2>
+        <p>Propiedades</p>
+      </div>
+      <div class="stat-item">
+        <h2>1200+</h2>
+        <p>Reservas exitosas</p>
+      </div>
+      <div class="stat-item">
+        <h2>32</h2>
+        <p>Departamentos</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección ¿Qué buscas hacer? -->
+  <section class="options-section">
+    <h2>¿Qué buscas hacer?</h2>
+    
+    <div class="options-container">
+      <!-- Aquí irían los componentes de tarjetas de opciones -->
+      <app-option-card [type]="'arrendatario'"></app-option-card>
+      <app-option-card [type]="'arrendador'"></app-option-card>
+    </div>
+  </section>
+
+  <!-- Sección ¿Por qué elegir ArriendaTuFinca? -->
+  <section class="features-section">
+    <h2>¿Por qué elegir ArriendaTuFinca?</h2>
+    
+    <div class="features-container">
+      <!-- Aquí irían los componentes de tarjetas de características -->
+      <app-feature-card *ngFor="let feature of features" [feature]="feature"></app-feature-card>
+    </div>
+  </section>
+
+  <!-- Sección Testimonios -->
+  <section class="testimonials-section">
+    <h2>Lo que dicen nuestros usuarios</h2>
+    
+    <div class="testimonials-container">
+      <!-- Aquí irían los componentes de tarjetas de testimonios -->
+      <app-testimonial-card *ngFor="let testimonial of testimonials" [testimonial]="testimonial"></app-testimonial-card>
+    </div>
+  </section>
+
+  <!-- Sección CTA -->
+  <section class="cta-section">
+    <h2>¿Listo para comenzar?</h2>
+    <p>Únete a nuestra comunidad y comienza a disfrutar de todos los beneficios que ArriendaTuFinca tiene para ti.</p>
+    <a class="cta-button" routerLink="/registro">Crear cuenta gratis</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>ArriendaTuFinca</h3>
+        <p>La mejor plataforma para encontrar y reservar fincas y propiedades rurales en toda Colombia.</p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Atención al Cliente</h3>
+        <ul>
+          <li><a href="#">Centro de Ayuda</a></li>
+          <li><a href="#">Soporte 24/7</a></li>
+          <li><a href="#">Chat en Línea</a></li>
+          <li><a href="#">Preguntas Frecuentes</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Términos y Condiciones</a></li>
+          <li><a href="#">Política de Privacidad</a></li>
+          <li><a href="#">Política de Cookies</a></li>
+          <li><a href="#">Política de Cancelación</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Contacto</h3>
+        <ul class="contact-info">
+          <li><a href="mailto:info@arriendatufinca.com">info&#64;arriendatufinca.com</a></li>
+          <li><a href="tel:+573001234567">+57 300 123 4567</a></li>
+          <li>Bogotá, Colombia</li>
+          <li><a href="#">Formulario de contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 ArriendaTuFinca. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+</main>

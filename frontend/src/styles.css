@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+:root{
+    /* Colores principales */
+    --cafeOscuro: #8B4513;          /* Color principal (marrón/café oscuro) */
+    --cafeClaro: #703605;           /* Café claro (para títulos) */
+    --amarillo: #FFBF00;            /* Amarillo (para botones y acentos) */
+    
+    /* Colores de fondo de secciones */
+    --fondoBlanco: #ffffff;         /* Fondo blanco (sections: options, testimonials) */
+    --fondoBeige: #f9f4f0;          /* Fondo beige (section: features) */
+    --fondoFooter: #1F1F1F;         /* Fondo negro footer */
+  
+    /* Colores para texto */
+    --textoOscuro: #333333;         /* Texto principal */
+    --textoGris: #666666;           /* Texto secundario */
+    --textoClaro: #cccccc;          /* Texto en footer */
+    --textoFooter: #999999;         /* Texto copyright footer */
+  
+    /* Login - Registro */
+
+    --cafeOscuro2: hsl(28, 32%, 47%);
+    --cafeOscuroOscuro: hsl(28, 32%, 30%);    
+    --beigeClaro: hsl(28, 32%, 30%);          /* Color exacto de la columna derecha */
+    --rojoBoton: #9e4a36;           /* Color del botón de inicio de sesión */
+    --textoBlanco: #FFFFFF;
+    --textoOscuro2: #4a3520;
+    --textoGris2: #7d6852;
+    --bordeInput: #e6ddc6;
+    --inputBackground: #ffffff;     /* Fondo blanco para los inputs */
+    --boxBackground: rgba(193, 189, 189, 0.15); /* Fondo para el cuadro "¿Todavía no tienes cuenta?" */
+    
+    --colorFondoCafeDegrade:
+  }
