@@ -6,7 +6,7 @@
         <div class="icon-container">
           <i class="material-icons">hourglass_empty</i>
         </div>
-        <div class="number">{{ stats.pending }}</div>
+        <div class="number">{{ pendientes }}</div>
         <div class="label">Pendientes</div>
       </div>
       
@@ -14,7 +14,7 @@
         <div class="icon-container">
           <i class="material-icons">check_circle</i>
         </div>
-        <div class="number">{{ stats.approved }}</div>
+        <div class="number">{{ aprobadas }}</div>
         <div class="label">Aprobadas</div>
       </div>
       
@@ -22,7 +22,7 @@
         <div class="icon-container">
           <i class="material-icons">cancel</i>
         </div>
-        <div class="number">{{ stats.rejected }}</div>
+        <div class="number">{{ rechazadas }}</div>
         <div class="label">Rechazadas</div>
       </div>
       
@@ -30,102 +30,65 @@
         <div class="icon-container">
           <i class="material-icons">verified_user</i>
         </div>
-        <div class="number">{{ stats.completed }}</div>
+        <div class="number">{{ completadas}}</div>
         <div class="label">Completadas</div>
       </div>
-    </div>
-    
-    <!-- Filtros -->
-    <div class="filters-container">
-      <div class="filter-group">
-        <label>Propiedad</label>
-        <select class="filter-select" [(ngModel)]="filters.property">
-          <option value="all">Todas las propiedades</option>
-          <option value="finca1">Finca El Paraíso</option>
-          <option value="finca2">Finca Los Rosales</option>
-          <option value="finca3">Hacienda Santa Clara</option>
-        </select>
-      </div>
-      
-      <div class="filter-group">
-        <label>Estado</label>
-        <select class="filter-select" [(ngModel)]="filters.status">
-          <option value="all">Todos los estados</option>
-          <option value="pending">Pendientes</option>
-          <option value="approved">Aprobadas</option>
-          <option value="rejected">Rechazadas</option>
-          <option value="completed">Completadas</option>
-        </select>
-      </div>
-      
-      <div class="filter-group date">
-        <label>Fecha de inicio</label>
-        <input type="date" class="date-input" [(ngModel)]="filters.startDate">
-      </div>
-      
-      <div class="filter-group date">
-        <label>Fecha de fin</label>
-        <input type="date" class="date-input" [(ngModel)]="filters.endDate">
-      </div>
-      
-      <button class="filter-btn" (click)="filterRequests(filters)">Filtrar</button>
     </div>
     
     <!-- Tabs de estados -->
     <div class="tabs-container">
       <div class="tab" [ngClass]="{ 'active': activeTab === 'all' }" (click)="changeTab('all')">
-        <span>Todas ({{ stats.total }})</span>
+        <span>Todas ({{ solicitudes.length }})</span>
       </div>
       <div class="tab" [ngClass]="{ 'active': activeTab === 'pending' }" (click)="changeTab('pending')">
-        <span>Pendientes ({{ stats.pending }})</span>
+        <span>Pendientes ({{ pendientes }})</span>
       </div>
       <div class="tab" [ngClass]="{ 'active': activeTab === 'approved' }" (click)="changeTab('approved')">
-        <span>Aprobadas ({{ stats.approved }})</span>
+        <span>Aprobadas ({{ aprobadas }})</span>
       </div>
       <div class="tab" [ngClass]="{ 'active': activeTab === 'rejected' }" (click)="changeTab('rejected')">
-        <span>Rechazadas ({{ stats.rejected }})</span>
+        <span>Rechazadas ({{ rechazadas }})</span>
       </div>
       <div class="tab" [ngClass]="{ 'active': activeTab === 'completed' }" (click)="changeTab('completed')">
-        <span>Completadas ({{ stats.completed }})</span>
+        <span>Completadas ({{ completadas }})</span>
       </div>
     </div>
     
     <!-- Lista de solicitudes -->
     <div class="requests-list">
-      <app-solicitud-card *ngFor="let solicitud of solicitudes"
-        [propertyId]="solicitud.propertyId"
-        [propertyName]="solicitud.propertyName"
-        [propertyLocation]="solicitud.propertyLocation"
-        [guestInitials]="solicitud.guestInitials"
-        [guestName]="solicitud.guestName"
-        [checkIn]="solicitud.checkIn"
-        [checkOut]="solicitud.checkOut"
-        [totalAmount]="solicitud.totalAmount"
-        [requestId]="solicitud.requestId"
-        [status]="solicitud.status"
-        [showActions]="solicitud.showActions"
-        (click)="viewDetails(solicitud.requestId)">
+      <app-solicitud-card *ngFor="let solicitud of solicitudesFiltradas"
+        [propertyName]="solicitud.propiedadNombre"
+        [guestInitials]="getInitial(solicitud.arrendadorNombre)"
+        [guestName]="solicitud.arrendadorNombre"
+        [checkIn]="solicitud.fechaInicio"
+        [checkOut]="solicitud.fechaFin"
+        [requestId]="solicitud.id"
+        [status]="solicitud.estado"
+        (click)="viewDetails(solicitud.id)"
+        (viewDetailsEvent)="viewDetails($event)"
+        (approveRequestEvent)="approveRequest($event)"
+        (rejectRequestEvent)="rejectRequest($event)">
       </app-solicitud-card>
     </div>
     
     <!-- Modales -->
     <!-- Modal de Detalles de Solicitud -->
-    <app-solicitud-details 
+    <!-- <app-solicitud-details 
       *ngIf="showDetailsModal"
       [visible]="showDetailsModal"
       [solicitudData]="selectedSolicitud"
       (closeEvent)="closeDetailsModal()"
       (approved)="approveRequest($event)"
       (rejected)="rejectRequest($event)">
-    </app-solicitud-details>
+    </app-solicitud-details> -->
     
     <!-- Modal de Calificación -->
-    <app-solicitud-calificacion
+    <!-- <app-solicitud-calificacion
       *ngIf="showReviewModal"
       [visible]="showReviewModal"
       [solicitud]="selectedSolicitud"
       [guest]="selectedGuest"
       (close)="closeReviewModal()"
       (reviewSubmitted)="submitReview($event)">
-    </app-solicitud-calificacion>
-  </div>
+    </app-solicitud-calificacion> -->
+</div>

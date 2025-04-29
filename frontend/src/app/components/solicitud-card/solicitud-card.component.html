@@ -49,8 +49,8 @@
       </div>
       
       <div class="action-buttons" *ngIf="showActions">
-        <button class="approve-btn">Aprobar</button>
-        <button class="reject-btn">Rechazar</button>
+        <button class="approve-btn" (click)="updateEstadoSolicitud(EstadoSolicitud.APROBADA)">Aprobar</button>
+        <button class="reject-btn" (click)="updateEstadoSolicitud(EstadoSolicitud.RECHAZADA)">Rechazar</button>
       </div>
       
       <button class="details-btn">Ver detalles</button>
