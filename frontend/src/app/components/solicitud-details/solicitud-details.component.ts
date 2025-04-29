@@ -7,6 +7,7 @@ import { Pago } from '../../models/pago.model';
 import { EstadoSolicitud } from '../../enums/estado_solicitud';
 import { EstadoPago } from '../../enums/estado_pago';
 import { MetodoPago } from '../../enums/metodo_pago';
+import { SolicitudService } from '../../services/solicitud-services/solicitud.service';
 
 @Component({
   selector: 'app-solicitud-details',
@@ -23,79 +24,77 @@ export class SolicitudDetailsComponent implements OnInit, OnChanges {
   @Output() approved = new EventEmitter<number>();
   @Output() rejected = new EventEmitter<number>();
 
-  // Propiedades adaptadas para la vista
-  property: {
-    code: string;
-    name: string;
-    location: string;
-    description: string;
-    capacity: number;
-    price: number;
-    rating: number;
-  } = {
-    code: '',
-    name: '',
-    location: '',
-    description: '',
-    capacity: 0,
-    price: 0,
-    rating: 0
-  };
-
-  guest: {
-    name: string;
-    email: string;
-    phone: string;
-    memberSince: Date;
-  } = {
-    name: '',
-    email: '',
-    phone: '',
-    memberSince: new Date()
-  };
-
-  reservation: {
-    id: string;
-    status: string;
-    requestDate: Date;
-    checkInDate: Date;
-    checkOutDate: Date;
-    duration: number;
-    totalAmount: number;
-    paymentStatus: string;
-    paymentMethod?: string;
-    paymentReference?: string;
-    paymentDate?: Date;
-    comments?: string;
-  } = {
-    id: '',
-    status: '',
-    requestDate: new Date(),
-    checkInDate: new Date(),
-    checkOutDate: new Date(),
-    duration: 0,
-    totalAmount: 0,
-    paymentStatus: '',
-    comments: ''
-  };
-
-  // Referencias a los modelos originales
   solicitud!: Solicitud;
   propiedad!: Propiedad;
+  arrendador!: Usuario;
   arrendatario!: Usuario;
   pago?: Pago;
 
-  constructor() { }
+  property: any = {};
+  guest: any = {};
+  reservation: any = {};
+  
+  dataLoaded = false;
+  errorMessage: string | null = null;
+
+  constructor(private solicitudService: SolicitudService) { }
 
   ngOnInit(): void {
-    this.actualizarDatosVista();
+    if (this.solicitudId > 0) {
+      this.loadSolicitudData();
+    } else if (this.solicitud) {
+      this.actualizarDatosVista();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ((changes['solicitud'] && changes['solicitud'].currentValue) || 
-        (changes['visible'] && changes['visible'].currentValue)) {
+    // Si cambia el ID de la solicitud, cargar nuevos datos
+    if (changes['solicitudId'] && !changes['solicitudId'].firstChange && this.solicitudId > 0) {
+      this.loadSolicitudData();
+    }
+    
+    // Si se actualiza la solicitud directamente
+    if (changes['solicitud'] && changes['solicitud'].currentValue) {
       this.actualizarDatosVista();
     }
+    
+    // Si cambia la visibilidad a true y tenemos un ID, cargar datos
+    if (changes['visible'] && changes['visible'].currentValue === true && this.solicitudId > 0) {
+      this.loadSolicitudData();
+    }
+  }
+
+  /**
+   * Carga los datos completos de la solicitud usando el ID
+   */
+  loadSolicitudData(): void {
+    this.dataLoaded = false;
+    this.errorMessage = null;
+    
+    this.solicitudService.getSolicitudById(this.solicitudId)
+      .then((data: Solicitud) => {
+        this.solicitud = data;
+        if (data.propiedad) {
+          this.propiedad = data.propiedad;
+        }
+        if (data.arrendador) {
+          this.arrendador = data.arrendador;
+        }
+        if (data.arrendatario) {
+          this.arrendatario = data.arrendatario;
+        }
+        if (data.pago) {
+          this.pago = data.pago;
+        }
+        
+        this.actualizarDatosVista();
+        this.dataLoaded = true;
+      })
+      .catch(error => {
+        console.error('Error al cargar detalles de solicitud:', error);
+        this.errorMessage = 'No se pudo cargar la información de la solicitud.';
+        this.dataLoaded = true; // Para mostrar el mensaje de error
+      });
   }
 
   /**
@@ -105,10 +104,23 @@ export class SolicitudDetailsComponent implements OnInit, OnChanges {
   set solicitudData(solicitud: Solicitud) {
     if (solicitud) {
       this.solicitud = solicitud;
-      this.propiedad = solicitud.propiedad;
-      this.arrendatario = solicitud.arrendatario;
-      this.pago = solicitud.pago;
+      this.solicitudId = solicitud.id;
+      
+      if (solicitud.propiedad) {
+        this.propiedad = solicitud.propiedad;
+      }
+      if (solicitud.arrendador) {
+        this.arrendador = solicitud.arrendador;
+      }
+      if (solicitud.arrendatario) {
+        this.arrendatario = solicitud.arrendatario;
+      }
+      if (solicitud.pago) {
+        this.pago = solicitud.pago;
+      }
+      
       this.actualizarDatosVista();
+      this.dataLoaded = true;
     }
   }
 
@@ -116,25 +128,39 @@ export class SolicitudDetailsComponent implements OnInit, OnChanges {
    * Actualiza los datos formateados para la vista
    */
   private actualizarDatosVista(): void {
-    if (!this.solicitud || !this.solicitud.propiedad || !this.solicitud.arrendatario) return;
+    if (!this.solicitud) {
+      this.errorMessage = 'No hay datos de solicitud disponibles';
+      return;
+    }
+    
+    // Si no hay propiedad o usuario, intentar cargar completamente desde el servicio
+    if (!this.propiedad || !this.arrendador || !this.arrendatario) {
+      if (this.solicitudId > 0) {
+        this.loadSolicitudData();
+        return;
+      } else {
+        this.errorMessage = 'Datos de solicitud incompletos';
+        return;
+      }
+    }
 
     // Datos de la propiedad
     this.property = {
-      code: this.getPropertyCode(this.solicitud.propiedad),
-      name: this.solicitud.propiedad.nombre,
-      location: this.getPropertyLocation(this.solicitud.propiedad),
-      description: this.solicitud.propiedad.descripcion,
-      capacity: this.solicitud.propiedad.capacidad,
-      price: this.solicitud.propiedad.precioPorDia,
-      rating: this.getPropertyRating(this.solicitud.propiedad)
+      code: this.getPropertyCode(this.propiedad),
+      name: this.propiedad.nombre,
+      location: this.getPropertyLocation(this.propiedad),
+      description: this.propiedad.descripcion,
+      capacity: this.propiedad.capacidad || 'N/A',
+      price: this.propiedad.precioPorDia,
+      rating: this.getPropertyRating(this.propiedad)
     };
 
-    // Datos del huésped
+    // Datos del huésped (arrendador)
     this.guest = {
-      name: this.solicitud.arrendatario.nombre,
-      email: this.solicitud.arrendatario.email,
-      phone: this.solicitud.arrendatario.telefono || '',
-      memberSince: this.getMemberSince(this.solicitud.arrendatario)
+      name: this.arrendador.nombre,
+      email: this.arrendador.email,
+      phone: this.arrendador.telefono || '',
+      memberSince: this.getMemberSince(this.arrendador)
     };
 
     // Datos del pago
@@ -171,6 +197,8 @@ export class SolicitudDetailsComponent implements OnInit, OnChanges {
    * Obtiene el código de la propiedad (F1, F2, etc.)
    */
   private getPropertyCode(propiedad: Propiedad): string {
+    if (!propiedad || !propiedad.nombre) return 'P0';
+    
     // Esta lógica puede variar según tus necesidades
     const tipoPropiedad = propiedad.nombre.startsWith('Finca') ? 'F' : 
                           propiedad.nombre.startsWith('Hacienda') ? 'H' : 'P';
@@ -181,14 +209,22 @@ export class SolicitudDetailsComponent implements OnInit, OnChanges {
    * Obtiene la ubicación completa de la propiedad
    */
   private getPropertyLocation(propiedad: Propiedad): string {
-    return `${propiedad.ciudad}, ${propiedad.departamento}`;
+    if (!propiedad) return 'Ubicación no disponible';
+    
+    if (propiedad.ciudad && propiedad.departamento) {
+      return `${propiedad.ciudad}, ${propiedad.departamento}`;
+    } else if (propiedad.ubicacion) {
+      return propiedad.ubicacion;
+    } else {
+      return 'Ubicación no disponible';
+    }
   }
 
   /**
    * Calcula la calificación promedio de la propiedad
    */
   private getPropertyRating(propiedad: Propiedad): number {
-    if (!propiedad.calificaciones || propiedad.calificaciones.length === 0) {
+    if (!propiedad || !propiedad.calificaciones || propiedad.calificaciones.length === 0) {
       return 0;
     }
     
@@ -212,6 +248,8 @@ export class SolicitudDetailsComponent implements OnInit, OnChanges {
    * Calcula la duración en días entre fechas
    */
   private calculateDuration(fechaInicio: Date, fechaFin: Date): number {
+    if (!fechaInicio || !fechaFin) return 0;
+    
     const start = new Date(fechaInicio);
     const end = new Date(fechaFin);
     const diffTime = Math.abs(end.getTime() - start.getTime());

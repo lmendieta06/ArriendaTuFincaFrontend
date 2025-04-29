@@ -1,28 +1,40 @@
-<div class="modal-container" *ngIf="visible">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Calificar al Huésped</h2>
-        <button class="close-button" (click)="closeModal()">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="section">
-          <h3 class="section-title">Información del Huésped</h3>
-          <div class="guest-info">
-            <div class="guest-avatar">{{ getInitials(guest?.nombre || '') }}</div>
-            <div class="guest-details">
-              <div class="guest-name">{{ guest?.nombre }}</div>
-              <div class="guest-contact">
-                <i class="email-icon">✉</i> {{ guest?.email }}
-              </div>
-              <div class="guest-contact" *ngIf="guest?.telefono">
-                <i class="phone-icon">📱</i> {{ guest?.telefono }}
-              </div>
-              <div class="guest-contact">
-                <i class="date-icon">📅</i> Usuario desde {{ getMemberSince() | date:'MMMM yyyy' }}
-              </div>
+<div class="modal-container" *ngIf="visible && dataLoaded">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Calificar al Huésped</h2>
+      <button class="close-button" (click)="closeModal()">×</button>
+    </div>
+      <!-- Cargando o error -->
+    <div class="loading-container" *ngIf="!dataLoaded">
+        <div class="spinner"></div>
+        <p>Cargando información...</p>
+    </div>
+    
+    <div class="error-container" *ngIf="errorMessage">
+      <div class="error-icon">⚠️</div>
+        <p class="error-message">{{ errorMessage }}</p>
+    </div>
+
+    <div class="modal-body" *ngIf="dataLoaded && !errorMessage">
+      <div class="section">
+        <h3 class="section-title">Información del Huésped</h3>
+
+        <div class="guest-info">
+          <div class="guest-avatar">{{ getInitials(guest?.nombre || '') }}</div>
+          <div class="guest-details">
+            <div class="guest-name">{{ guest?.nombre }}</div>
+            <div class="guest-contact">
+              <i class="email-">✉</i> {{ guest?.email }}
+            </div>
+            <div class="gueiconst-contact" *ngIf="guest?.telefono">
+              <i class="phone-icon">📱</i> {{ guest?.telefono }}
+            </div>
+            <div class="guest-contact">
+              <i class="date-icon">📅</i> Usuario desde {{ getMemberSince() | date:'MMMM yyyy' }}
             </div>
           </div>
         </div>
+      </div>
   
         <div class="section">
           <h3 class="section-title">Detalles de la Estadía</h3>
@@ -78,9 +90,15 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" *ngIf="dataLoaded && !errorMessage">
         <button class="btn btn-cancel" (click)="closeModal()">Cancelar</button>
-        <button class="btn btn-submit" [disabled]="rating === 0" (click)="submitReview()">Enviar Calificación</button>
+        <button 
+          class="btn btn-submit" 
+          [disabled]="rating === 0 || isSubmitting" 
+          (click)="submitReview()">
+          <span *ngIf="isSubmitting">Enviando...</span>
+          <span *ngIf="!isSubmitting">Enviar Calificación</span>
+        </button>
       </div>
     </div>
   </div>

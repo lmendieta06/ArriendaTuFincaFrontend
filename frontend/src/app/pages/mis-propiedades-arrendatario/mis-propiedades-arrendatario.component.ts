@@ -3,10 +3,12 @@ import { PropiedadCardComponent } from '../../components/propiedad-card/propieda
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../../services/login_services/login.service';
 import { PropertyService, PropiedadDetalle } from '../../services/property-services/property.service';
+import { CrearPropiedadComponent } from '../../components/crear-propiedad/crear-propiedad.component';
+import { UpdatePropiedadComponent } from '../../components/update-propiedad/update-propiedad.component';
 @Component({
   selector: 'app-mis-propiedades-arrendatario',
   standalone: true,
-  imports: [CommonModule, PropiedadCardComponent],
+  imports: [CommonModule, PropiedadCardComponent, CrearPropiedadComponent, UpdatePropiedadComponent],
   templateUrl: './mis-propiedades-arrendatario.component.html',
   styleUrl: './mis-propiedades-arrendatario.component.css'
 })
@@ -18,7 +20,10 @@ export class MisPropiedadesArrendatarioComponent {
   availableProperties: number = 0;
   unavailableProperties: number = 0;
   averageRating: number = 0;
-
+  showCreateModal: boolean = false;
+  showEditModal = false;
+  propiedadSeleccionada!: PropiedadDetalle;
+  
   constructor(private loginService: LoginService, private propiedadService:PropertyService) { }
 
   ngOnInit(): void {
@@ -71,6 +76,45 @@ export class MisPropiedadesArrendatarioComponent {
       console.log('Estructura de propiedades:', JSON.stringify(this.properties[0], null, 2));
     } else {
       console.log('No hay propiedades para mostrar');
+    }
+  }
+
+  abrirModalCrearPropiedad(): void {
+    this.showCreateModal = true;
+  }
+
+  cerrarModalCrearPropiedad(): void {
+    this.showCreateModal = false;
+  }
+
+  onPropiedadCreada(): void {
+    this.cargarMisPropiedades();
+  }
+
+  abrirModalEditarPropiedad(propiedad: PropiedadDetalle): void {
+    this.propiedadSeleccionada = { ...propiedad }; // copia por seguridad
+    this.showEditModal = true;
+  }
+  
+  cerrarModalEditarPropiedad(): void {
+    this.showEditModal = false;
+    this.propiedadSeleccionada;
+  }
+  
+  onPropiedadActualizada(): void {
+    this.cargarMisPropiedades();
+  }
+
+  desactivarPropiedad(id: number): void {
+    if (confirm('¿Estás seguro de que deseas desactivar esta propiedad?')) {
+      this.propiedadService.deletePropiedad(id)
+        .then(() => {
+          this.cargarMisPropiedades(); // recarga la lista después de desactivar
+        })
+        .catch(error => {
+          console.error('Error al desactivar la propiedad:', error);
+          alert('No se pudo desactivar la propiedad.');
+        });
     }
   }
 }
