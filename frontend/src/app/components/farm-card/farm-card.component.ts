@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,9 +8,19 @@ import { CommonModule } from '@angular/common';
   templateUrl: './farm-card.component.html',
   styleUrls: ['./farm-card.component.scss']
 })
-export class FarmCardComponent {
+export class FarmCardComponent implements OnInit{
   @Input() farmName: string = '';
   @Input() description: string = '';
-  @Input() status: string = 'Disponible';
-  @Input() imageNumber: number = 1;
+  @Input() status: boolean = true;
+  @Input() image: string = '';
+
+  disponible:string="";
+
+  ngOnInit(){
+    if(this.status === true){
+      this.disponible = 'Disponible';
+    }else{
+      this.disponible = 'Ocupada';
+    }
+  }
 }

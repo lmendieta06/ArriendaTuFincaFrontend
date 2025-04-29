@@ -6,6 +6,7 @@ import { HomeArrendatarioComponent } from './pages/home-arrendatario/home-arrend
 import { MisPropiedadesArrendatarioComponent } from './pages/mis-propiedades-arrendatario/mis-propiedades-arrendatario.component';
 import { DashboardArrendatarioComponent } from './pages/dashboard-arrendatario/dashboard-arrendatario.component';
 import { SolicitudesArrendatarioComponent } from './pages/solicitudes-arrendatario/solicitudes-arrendatario.component';
+import { HomeArrendadorComponent } from './pages/home-arrendador/home-arrendador.component';
 export const routes: Routes = [
   { path: '', component: HomeComponent, title:"Arrienda Tu Finca" },
   { path: 'inicio', component: LoginComponent, title:"Inicio" },
@@ -15,6 +16,7 @@ export const routes: Routes = [
     {path: 'mis-propiedades', component: MisPropiedadesArrendatarioComponent, title:"Mis Propiedades"},
     {path: 'solicitudes', component: SolicitudesArrendatarioComponent, title:"Solicitudes Recibidas"}
   ]},
+  { path: 'home-arrendador', component: HomeArrendadorComponent, title:"Home"}
 
 
 ];

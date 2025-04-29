@@ -1,8 +1,8 @@
-      <!-- Contenido del dashboard -->
-      <div class="dashboard-content">
+<!-- Contenido del dashboard -->
+<div class="dashboard-content">
         <!-- Sección de bienvenida -->
         <div class="welcome-section">
-          <h2>Bienvenido, Juan</h2>
+          <h2>Hola, {{userName}}</h2>
           <p>Aquí tienes un resumen de tu actividad reciente</p>
         </div>
   
@@ -12,7 +12,7 @@
             <div class="stat-icon home-icon">
               <i class="material-icons">home</i>
             </div>
-            <div class="stat-number">3</div>
+            <div class="stat-number">{{activeProperties}}</div>
             <div class="stat-label">Propiedades Activas</div>
           </div>
   
@@ -20,7 +20,7 @@
             <div class="stat-icon pending-icon">
               <i class="material-icons">assignment</i>
             </div>
-            <div class="stat-number">2</div>
+            <div class="stat-number">{{solicitudesPendientes}}</div>
             <div class="stat-label">Solicitudes Pendientes</div>
           </div>
   
@@ -28,7 +28,7 @@
             <div class="stat-icon completed-icon">
               <i class="material-icons">done_all</i>
             </div>
-            <div class="stat-number">5</div>
+            <div class="stat-number">{{arriendos}}</div>
             <div class="stat-label">Arriendos Completados</div>
           </div>
   
@@ -36,7 +36,7 @@
             <div class="stat-icon rating-icon">
               <i class="material-icons">star</i>
             </div>
-            <div class="stat-number">4.8</div>
+            <div class="stat-number">{{calificacionPromedio}}</div>
             <div class="stat-label">Calificación Promedio</div>
           </div>
         </div>
@@ -51,8 +51,8 @@
           <!-- Lista de fincas -->
           <div class="farms-list">
             <!-- Componente de tarjeta de finca -->
-            <app-farm-card  *ngFor="let propiedad of propiedades" [farmName]="propiedad.name" [description]="propiedad.description"[status]="propiedad.status" [imageNumber]="propiedad.imageNumber"></app-farm-card>
+            <app-farm-card  *ngFor="let propiedad of propiedades" [farmName]="propiedad.nombre" [description]="propiedad.descripcion"[status]="propiedad.disponible" [image]="propiedad.imagen"></app-farm-card>
   
           </div>
         </div>
-      </div>
+</div>

@@ -2,11 +2,11 @@
   <!-- Perfil del usuario -->
   <div class="user-profile">
     <div class="avatar">
-      <span>J</span>
+      <span>{{getInitial()}}</span>
     </div>
     <div class="user-info">
-      <h3>Juan Pérez</h3>
-      <p>Arrendatario</p>
+      <h3>{{userName}}</h3>
+      <p>{{userType}}</p>
     </div>
   </div>
 
@@ -36,7 +36,7 @@
 
   <!-- Cerrar sesión -->
   <div class="logout">
-    <a [routerLink]="['/login']">
+    <a (click)="logout()">
       <i class="material-icons">exit_to_app</i>
       <span>Cerrar Sesión</span>
     </a>

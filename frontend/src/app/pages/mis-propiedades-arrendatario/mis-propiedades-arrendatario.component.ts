@@ -3,6 +3,8 @@ import { PropiedadCardComponent } from '../../components/propiedad-card/propieda
 import { NavArrendatarioComponent } from '../../components/nav-arrendatario/nav-arrendatario.component';
 import { HeaderArrendatarioComponent } from '../../components/header-arrendatario/header-arrendatario.component';
 import { CommonModule } from '@angular/common';
+import { LoginService } from '../../services/login_services/login.service';
+import { PropertyService, PropiedadDetalle } from '../../services/property-services/property.service';
 @Component({
   selector: 'app-mis-propiedades-arrendatario',
   standalone: true,
@@ -11,95 +13,44 @@ import { CommonModule } from '@angular/common';
   styleUrl: './mis-propiedades-arrendatario.component.css'
 })
 export class MisPropiedadesArrendatarioComponent {
-  properties = [
-    {
-      name: 'Finca El Paraíso',
-      location: 'Santa Elena, Medellín, Antioquia',
-      price: 350000,
-      description: 'Hermosa finca con vista panorámica a las montañas, piscina, zonas verdes y espacios recreativos. Ideal para eventos familiares y descanso.',
-      capacity: 15,
-      rating: 4.9,
-      reservations: 8,
-      status: 'Disponible',
-      amenities: ['15 personas', 'Piscina'],
-      imageNumber: 1
-    },
-    {
-      name: 'Finca Los Rosales',
-      location: 'La Calera, Cundinamarca',
-      price: 280000,
-      description: 'Acogedora finca con jardines, zona de BBQ y espacios recreativos. Perfecta para escapadas de fin de semana en familia.',
-      capacity: 10,
-      rating: 4.7,
-      reservations: 5,
-      status: 'No Disponible',
-      amenities: ['10 personas', 'BBQ'],
-      imageNumber: 2
-    },
-    {
-      name: 'Finca Los Rosales',
-      location: 'La Calera, Cundinamarca',
-      price: 280000,
-      description: 'Acogedora finca con jardines, zona de BBQ y espacios recreativos. Perfecta para escapadas de fin de semana en familia.',
-      capacity: 10,
-      rating: 4.7,
-      reservations: 5,
-      status: 'No Disponible',
-      amenities: ['10 personas', 'BBQ'],
-      imageNumber: 2
-    },
-    {
-      name: 'Finca Los Rosales',
-      location: 'La Calera, Cundinamarca',
-      price: 280000,
-      description: 'Acogedora finca con jardines, zona de BBQ y espacios recreativos. Perfecta para escapadas de fin de semana en familia.',
-      capacity: 10,
-      rating: 4.7,
-      reservations: 5,
-      status: 'No Disponible',
-      amenities: ['10 personas', 'BBQ'],
-      imageNumber: 2
-    },
-    {
-      name: 'Finca Los Rosales',
-      location: 'La Calera, Cundinamarca',
-      price: 280000,
-      description: 'Acogedora finca con jardines, zona de BBQ y espacios recreativos. Perfecta para escapadas de fin de semana en familia.',
-      capacity: 10,
-      rating: 4.7,
-      reservations: 5,
-      status: 'No Disponible',
-      amenities: ['10 personas', 'BBQ'],
-      imageNumber: 2
+  properties:PropiedadDetalle[] = [];
+  loading = true;
+  error: string | null = null;
+  totalProperties: number = 5;
+  availableProperties: number = 3;
+  unavailableProperties: number = 2;
+  averageRating: number = 4.8;
+
+  constructor(private loginService: LoginService, private propiedadService:PropertyService) { }
+
+  ngOnInit(): void {
+    
+    this.cargarMisPropiedades();
+
+  }
+
+  cargarMisPropiedades(): void {
+    this.loading = true;
+    this.error = null;
+    
+    const userId = this.loginService.getUserId();
+    if (!userId) {
+      this.error = 'Debe iniciar sesión para ver sus propiedades.';
+      this.loading = false;
+      return;
     }
-  ];
-  
-  // Estadísticas generales
-  stats = {
-    totalProperties: 5,
-    availableProperties: 3,
-    unavailableProperties: 2,
-    averageRating: 4.8
-  };
-  
-  // Métodos para filtrar y buscar propiedades
-  searchProperties(term: string) {
-    // Implementación de búsqueda
-    console.log(`Búsqueda por término: ${term}`);
+
+    this.propiedadService.getPropiedadesByArrendatario(userId)
+      .then((propiedades) => {
+        this.properties = propiedades;
+        this.totalProperties = this.properties.length;
+        this.loading = false;
+      })
+      .catch((error) => {
+        console.error('Error al cargar mis propiedades:', error);
+        this.error = 'No se pudieron cargar sus propiedades. Por favor, intente de nuevo más tarde.';
+        this.loading = false;
+      });
   }
-  
-  filterByStatus(status: string) {
-    // Implementación de filtro por estado
-    console.log(`Filtro por estado: ${status}`);
-  }
-  
-  filterByDepartment(department: string) {
-    // Implementación de filtro por departamento
-    console.log(`Filtro por departamento: ${department}`);
-  }
-  
-  addNewProperty() {
-    // Lógica para añadir nueva propiedad
-    console.log('Añadir nueva propiedad');
-  }
+
 }

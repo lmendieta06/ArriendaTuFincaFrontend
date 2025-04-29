@@ -11,7 +11,7 @@
         <!-- Resumen de propiedades -->
         <div class="properties-summary">
           <div class="summary-card">
-            <div class="summary-value">5</div>
+            <div class="summary-value">{{totalProperties}}</div>
             <div class="summary-label">Total Propiedades</div>
           </div>
           
@@ -72,7 +72,7 @@
             [reservations]="propiedad.reservations"
             [status]="propiedad.status"
             [amenities]="propiedad.amenities"
-            [imageNumber]="propiedad.imageNumber">
+            [image]="propiedad.imagen">
           </app-propiedad-card >
         </div>
         

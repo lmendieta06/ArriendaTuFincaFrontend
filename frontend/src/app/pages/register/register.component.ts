@@ -52,13 +52,8 @@ export class RegisterComponent {
         console.log('Enviando datos al backend...', payload);
         const usuarioCreado = await this.registerService.createUsuario(payload);
         console.log('Usuario creado exitosamente:', usuarioCreado);
-
-        if(usuarioCreado.tipoUsuario === "ARRENDATARIO"){
-          this.router.navigate(['/home-arrendatario'])
-        }else if(usuarioCreado.tipoUsuario === "ARRENDADOR"){
-          // Temporal
-          this.router.navigate(['/inicio']);
-        }
+        
+        this.router.navigate(['/inicio'])
 
       } catch (error) {
         console.error('Error creando el usuario:', error);

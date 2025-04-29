@@ -17,5 +17,5 @@ export class PropiedadCardComponent {
   @Input() reservations: number = 0;
   @Input() status: string = 'Disponible';
   @Input() amenities: string[] = [];
-  @Input() imageNumber: number = 1;
+  @Input() image:string ='';
 }

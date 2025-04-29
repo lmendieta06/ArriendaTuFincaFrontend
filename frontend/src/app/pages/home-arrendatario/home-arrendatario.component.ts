@@ -10,5 +10,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './home-arrendatario.component.css'
 })
 export class HomeArrendatarioComponent {
-
+ 
 }
