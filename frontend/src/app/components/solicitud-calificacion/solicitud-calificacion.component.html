@@ -1,0 +1,86 @@
+<div class="modal-container" *ngIf="visible">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Calificar al Huésped</h2>
+        <button class="close-button" (click)="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="section">
+          <h3 class="section-title">Información del Huésped</h3>
+          <div class="guest-info">
+            <div class="guest-avatar">{{ getInitials(guest?.nombre || '') }}</div>
+            <div class="guest-details">
+              <div class="guest-name">{{ guest?.nombre }}</div>
+              <div class="guest-contact">
+                <i class="email-icon">✉</i> {{ guest?.email }}
+              </div>
+              <div class="guest-contact" *ngIf="guest?.telefono">
+                <i class="phone-icon">📱</i> {{ guest?.telefono }}
+              </div>
+              <div class="guest-contact">
+                <i class="date-icon">📅</i> Usuario desde {{ getMemberSince() | date:'MMMM yyyy' }}
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="section">
+          <h3 class="section-title">Detalles de la Estadía</h3>
+          <div class="stay-details">
+            <div class="status-badge completed">Completada</div>
+            <div class="detail-row">
+              <span class="detail-label">Propiedad</span>
+              <span class="detail-value">{{ solicitud?.propiedad?.nombre }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Fecha de Llegada</span>
+              <span class="detail-value">{{ solicitud?.fechaInicio | date:'d MMMM, yyyy' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Fecha de Salida</span>
+              <span class="detail-value">{{ solicitud?.fechaFin | date:'d MMMM, yyyy' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Duración</span>
+              <span class="detail-value">{{ getDuration() }} días</span>
+            </div>
+          </div>
+        </div>
+  
+        <div class="section">
+          <h3 class="section-title">Califica tu experiencia con este huésped</h3>
+          <div class="review-info">
+            <p class="review-description">
+              Tu calificación ayuda a otros anfitriones a tomar mejores decisiones<br>
+              Evalúa tu experiencia con este huésped durante su estadía en tu propiedad
+            </p>
+            
+            <div class="rating-container">
+              <div class="star-rating">
+                <span class="star" [ngClass]="{'active': rating >= 1}" (click)="setRating(1)">★</span>
+                <span class="star" [ngClass]="{'active': rating >= 2}" (click)="setRating(2)">★</span>
+                <span class="star" [ngClass]="{'active': rating >= 3}" (click)="setRating(3)">★</span>
+                <span class="star" [ngClass]="{'active': rating >= 4}" (click)="setRating(4)">★</span>
+                <span class="star" [ngClass]="{'active': rating >= 5}" (click)="setRating(5)">★</span>
+              </div>
+              <div class="rating-text" *ngIf="rating > 0">
+                {{ rating }} de 5 - {{ getRatingText() }}
+              </div>
+            </div>
+            
+            <div class="comment-container">
+              <textarea 
+                class="comment-input" 
+                placeholder="Describe tu experiencia con este huésped (opcional)"
+                [(ngModel)]="comment"
+                rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn btn-submit" [disabled]="rating === 0" (click)="submitReview()">Enviar Calificación</button>
+      </div>
+    </div>
+  </div>

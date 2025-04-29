@@ -1,0 +1,125 @@
+<div class="modal-container" *ngIf="visible">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Detalles de la Solicitud</h2>
+        <button class="close-button" (click)="close()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="section">
+          <h3 class="section-title">Información de la Propiedad</h3>
+          <div class="property-info">
+            <div class="property-image">{{ property.code }}</div>
+            <div class="property-details">
+              <div class="property-name">{{ property.name }}</div>
+              <div class="property-location">{{ property.location }}</div>
+              <div class="property-description">{{ property.description }}</div>
+              <div class="property-stats">
+                <div class="stat">
+                  <div class="stat-value">{{ property.capacity }}</div>
+                  <div class="stat-label">Capacidad</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-value">{{ property.price | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+                  <div class="stat-label">Por/noche</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-value">{{ property.rating }}</div>
+                  <div class="stat-label">Calificación</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="section">
+          <h3 class="section-title">Información del Huésped</h3>
+          <div class="guest-info">
+            <div class="guest-avatar">{{ getInitials(guest.name) }}</div>
+            <div class="guest-details">
+              <div class="guest-name">{{ guest.name }}</div>
+              <div class="guest-contact">
+                <i class="email-icon">✉</i> {{ guest.email }}
+              </div>
+              <div class="guest-contact" *ngIf="guest.phone">
+                <i class="phone-icon">📱</i> {{ guest.phone }}
+              </div>
+              <div class="guest-contact">
+                <i class="date-icon">📅</i> Usuario desde {{ guest.memberSince | date:'MMMM yyyy' }}
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="section">
+          <h3 class="section-title">Detalles de la Solicitud</h3>
+          <div class="reservation-details">
+            <div class="status-badge" [ngClass]="reservation.status.toLowerCase()">{{ reservation.status }}</div>
+            <div class="detail-row">
+              <span class="detail-label">ID de Solicitud</span>
+              <span class="detail-value">{{ reservation.id }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Fecha de Solicitud</span>
+              <span class="detail-value">{{ reservation.requestDate | date:'d MMMM, yyyy' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Fecha de Llegada</span>
+              <span class="detail-value">{{ reservation.checkInDate | date:'d MMMM, yyyy' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Fecha de Salida</span>
+              <span class="detail-value">{{ reservation.checkOutDate | date:'d MMMM, yyyy' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Duración</span>
+              <span class="detail-value">{{ reservation.duration }} días</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Monto Total</span>
+              <span class="detail-value">{{ reservation.totalAmount | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Estado de Pago</span>
+              <span class="detail-value">{{ reservation.paymentStatus }}</span>
+            </div>
+            
+            <!-- Información adicional de pago si existe -->
+            <ng-container *ngIf="reservation.paymentMethod">
+              <div class="detail-row">
+                <span class="detail-label">Método de Pago</span>
+                <span class="detail-value">{{ reservation.paymentMethod }}</span>
+              </div>
+            </ng-container>
+            
+            <ng-container *ngIf="reservation.paymentReference">
+              <div class="detail-row">
+                <span class="detail-label">Referencia de Pago</span>
+                <span class="detail-value">{{ reservation.paymentReference }}</span>
+              </div>
+            </ng-container>
+            
+            <ng-container *ngIf="reservation.paymentDate">
+              <div class="detail-row">
+                <span class="detail-label">Fecha de Pago</span>
+                <span class="detail-value">{{ reservation.paymentDate | date:'d MMMM, yyyy' }}</span>
+              </div>
+            </ng-container>
+          </div>
+  
+          <div class="comments-section" *ngIf="reservation.comments">
+            <div class="comments-label">Comentarios del Huésped</div>
+            <div class="comments-text">
+              {{ reservation.comments }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="close()">Cerrar</button>
+        <ng-container *ngIf="solicitud && solicitud.estado === 'PENDIENTE'">
+          <button class="btn btn-approve" (click)="approveReservation()">Aprobar Solicitud</button>
+          <button class="btn btn-reject" (click)="rejectReservation()">Rechazar Solicitud</button>
+        </ng-container>
+      </div>
+    </div>
+  </div>

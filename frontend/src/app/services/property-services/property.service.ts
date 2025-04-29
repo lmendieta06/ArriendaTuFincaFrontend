@@ -19,6 +19,7 @@ export interface PropiedadDetalle extends Propiedad {
   solicitudes: Solicitud[];
   calificaciones: Calificacion[];
   imagen: string;
+  calificacionPromedio:number;
 }
 
 export interface PropiedadCreateDTO {
