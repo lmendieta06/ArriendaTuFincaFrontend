@@ -32,7 +32,9 @@ export class SolicitudCardComponent {
    @Output() viewDetailsEvent = new EventEmitter<number>();
    @Output() approveRequestEvent = new EventEmitter<number>();
    @Output() rejectRequestEvent = new EventEmitter<number>();
-
+   @Output() openReviewEvent = new EventEmitter<Solicitud>();
+   @Output() openDetailsEvent = new EventEmitter<Solicitud>();
+   
   constructor(private solicitudService: SolicitudService) {}
 
   ngOnInit():void {
@@ -102,6 +104,19 @@ export class SolicitudCardComponent {
     .catch(error => {
       console.error(`Error al actualizar estado a ${estado}:`, error);
     });
+  }
+
+  onDetailsClick(): void {
+    console.log("revisando detalles")
+    if (!this.solicitud) return;
+  
+    if (this.solicitud.estado === 'COMPLETADA') {
+      console.log("completada")
+      this.openReviewEvent.emit(this.solicitud);
+    } else {
+      console.log("else")
+      this.openDetailsEvent.emit(this.solicitud);
+    }
   }
 
   approveRequest(event: Event): void {

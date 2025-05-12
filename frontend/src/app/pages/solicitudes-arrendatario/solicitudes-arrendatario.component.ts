@@ -214,13 +214,38 @@ export class SolicitudesArrendatarioComponent implements OnInit {
       this.showDetailsModal = true;
     }
   }
+  abrirModalDetalles(solicitud: Solicitud): void {
+    console.log("normal")
+    console.log(solicitud)
+    this.selectedSolicitud = solicitud;
+    this.showDetailsModal = true;
+    console.log(this.selectedSolicitud)
+
+  }
+  
+  abrirModalCalificacion(solicitud: Solicitud): void {
+    console.log("calificacion")
+    console.log(solicitud)
+    this.selectedSolicitud = solicitud;
+    this.selectedGuest = solicitud.arrendador;
+    this.showReviewModal = true;
+    console.log(this.selectedGuest)
+    console.log(this.selectedSolicitud)
+    
+  }
   
   closeDetailsModal(): void {
+    console.log("detaller")
     this.showDetailsModal = false;
+    this.selectedGuest=null;
+    this.selectedSolicitud=null;
   }
   
   closeReviewModal(): void {
+    console.log("calificacion")
     this.showReviewModal = false;
+    this.showDetailsModal = false;
+    this.selectedSolicitud = null;
   }
   
   approveRequest(requestId: number): void {

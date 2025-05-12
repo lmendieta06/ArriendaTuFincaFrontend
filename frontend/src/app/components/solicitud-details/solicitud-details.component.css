@@ -9,7 +9,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1050;
+    z-index: 9998 !important;
   }
   
   .modal {
@@ -18,8 +18,13 @@
     width: 500px;
     max-width: 90%;
     max-height: 90vh;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;  
+    z-index: 9999 !important;
     overflow-y: auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1060;
     position: relative;
     animation: fadeIn 0.2s ease-in-out;
   }

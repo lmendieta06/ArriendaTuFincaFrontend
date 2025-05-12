@@ -64,7 +64,7 @@
             </select>
           </div>
           
-          <button class="add-property-btn">
+          <button class="add-property-btn" (click)="abrirModalCrearPropiedad()">
             <i class="material-icons">add</i>
             Añade Propiedad
           </button>
@@ -83,7 +83,9 @@
             [reservations]="propiedad.solicitudes?.length || 0"
             [status]="propiedad.disponible ? 'Disponible' : 'No Disponible'"
             [amenities]="propiedad.caracteristicas ? propiedad.caracteristicas.split(',') : []"
-            [image]="propiedad.imagen || ''">
+            [image]="propiedad.imagen || ''"
+            (editar)="abrirModalEditarPropiedad(propiedad)"
+            (desactivar)="desactivarPropiedad(propiedad.id)">
           </app-propiedad-card>
         </div>
         
@@ -103,4 +105,18 @@
       </div>
     </div>
   </div>
+
+  <app-crear-propiedad
+    [visible]="showCreateModal"
+    (close)="cerrarModalCrearPropiedad()"
+    (propiedadCreada)="onPropiedadCreada()">
+  </app-crear-propiedad>
+
+  <app-update-propiedad
+  *ngIf="showEditModal"
+  [visible]="showEditModal"
+  [propiedad]="propiedadSeleccionada"
+  (close)="cerrarModalEditarPropiedad()"
+  (propiedadActualizada)="onPropiedadActualizada()">
+</app-update-propiedad>
 </div>

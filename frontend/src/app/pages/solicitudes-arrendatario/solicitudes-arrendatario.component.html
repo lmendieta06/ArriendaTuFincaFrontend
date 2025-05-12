@@ -67,28 +67,29 @@
         (click)="viewDetails(solicitud.id)"
         (viewDetailsEvent)="viewDetails($event)"
         (approveRequestEvent)="approveRequest($event)"
-        (rejectRequestEvent)="rejectRequest($event)">
+        (rejectRequestEvent)="rejectRequest($event)"
+        (openDetailsEvent)="abrirModalDetalles($event)"
+        (openReviewEvent)="abrirModalCalificacion($event)">
       </app-solicitud-card>
     </div>
     
     <!-- Modales -->
     <!-- Modal de Detalles de Solicitud -->
-    <!-- <app-solicitud-details 
-      *ngIf="showDetailsModal"
-      [visible]="showDetailsModal"
-      [solicitudData]="selectedSolicitud"
-      (closeEvent)="closeDetailsModal()"
+    <app-solicitud-details 
+      *ngIf="showDetailsModal"   
+      [visible]="true"
+      [solicitudId]="selectedSolicitud.id"
+      (close)="closeDetailsModal()"
       (approved)="approveRequest($event)"
       (rejected)="rejectRequest($event)">
-    </app-solicitud-details> -->
-    
+    </app-solicitud-details>
+
     <!-- Modal de Calificación -->
-    <!-- <app-solicitud-calificacion
-      *ngIf="showReviewModal"
-      [visible]="showReviewModal"
-      [solicitud]="selectedSolicitud"
-      [guest]="selectedGuest"
+    <app-solicitud-calificacion
+      *ngIf="showReviewModal && selectedSolicitud"  
+      [visible]="true"
+      [solicitudId]="selectedSolicitud.id"
       (close)="closeReviewModal()"
       (reviewSubmitted)="submitReview($event)">
-    </app-solicitud-calificacion> -->
+    </app-solicitud-calificacion>
 </div>
