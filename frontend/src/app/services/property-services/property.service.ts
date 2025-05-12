@@ -11,6 +11,7 @@ export interface PropiedadSimple {
   descripcion: string;
   ubicacion: string;
   precioPorDia: number;
+  capacidad: number;
   disponible: boolean;
   imagen: string;
 }

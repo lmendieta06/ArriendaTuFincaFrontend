@@ -1,0 +1,51 @@
+<div class="buscador-container">
+   <!-- Sección de bienvenida -->
+   <div class="welcome-section">
+    <h1>Buscar Propiedades</h1>
+    <h2>Hola, {{userName}}</h2>
+    <p>¿Que deseas buscar en esta ocasión?</p>
+  </div>
+
+  <!-- Formulario -->
+  <form (ngSubmit)="buscar()" class="form-horizontal">
+    <div class="form-row">
+      <label for="nombre">Destino</label>
+      <input type="text" id="nombre" placeholder="Destino" [(ngModel)]="filtros.nombre" name="nombre" />
+    </div>
+  
+    <div class="form-row">
+      <label for="ubicacion">Ubicación</label>
+      <select id="ubicacion" [(ngModel)]="filtros.ubicacion" name="ubicacion">
+        <option *ngFor="let ciudad of ciudades" [value]="ciudad">{{ ciudad }}</option>
+      </select>
+    </div>
+  
+    <div class="form-row">
+      <label for="personas">Cantidad de personas</label>
+      <input type="number" min="0" id="personas" placeholder="Personas" [(ngModel)]="filtros.personas" name="personas" />
+    </div>
+  
+    <div class="form-row" style="justify-content: center;">
+      <button type="submit">Buscar</button>
+    </div>
+  </form>
+  
+
+  <div class="finca-list">
+    <!-- Componente de tarjeta de finca -->
+    <app-finca-card
+  *ngFor="let propiedad of propiedades"
+  [fincaName]="propiedad.nombre"
+  [description]="propiedad.descripcion"
+  [precioPorDia]="propiedad.precioPorDia"
+  [status]="propiedad.disponible"
+  [ubicacion]="propiedad.ubicacion"
+  [capacidad]="propiedad.capacidad"
+  [image]="propiedad.imagen"
+  (detalles)="verDetalles(propiedad.id)">
+</app-finca-card>
+  </div>
+    
+</div>
+
+

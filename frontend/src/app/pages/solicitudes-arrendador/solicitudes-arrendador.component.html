@@ -1,0 +1,93 @@
+<div class="dashboard-content">
+
+    <div class="welcome-section">
+        <h1>Solicitudes para Arrendar</h1>
+        <p>Aqui encontraras el estado de tus solicitudes</p>
+      </div>
+    
+    <!-- Formulario -->
+    <form (ngSubmit)="buscarSolicitudes()" class="form-horizontal">
+        <div class="form-row">
+            <div>
+                <label for="property">Propiedad</label>
+                <select id="property" aria-placeholder="Todas las propiedades" [(ngModel)]="filters.property" name="property">
+                    <option *ngFor="let propiedad of propiedad" [value]="propiedad">{{ propiedad }}</option>
+                </select>
+            </div>
+      
+            <div>
+                <label for="status">Estado</label>
+                <select id="status" [(ngModel)]="filters.status" name="status">
+                    <option *ngFor="let estado of estado" aria-placeholder="Todos los estados" [value]="estado">{{ estado }}</option>
+                </select>
+            </div>
+      
+            <div>
+                <label for="startDate">Fecha de Inicio</label>
+                <input type="date" id="startDate" [(ngModel)]="filters.startDate" name="startDate" />
+            </div>
+
+            <div>
+                <label for="endDate">Fecha de Fin</label>
+                <input type="date" id="endDate" [(ngModel)]="filters.endDate" name="endDate" />
+            </div>
+      
+            <div>
+                <button type="submit">Filtrar</button>
+            </div>
+        </div>
+    </form>
+    <!-- Tabs de estados -->
+    <div class="tabs-container">
+      <div class="tab" [ngClass]="{ 'active': activeTab === 'all' }" (click)="changeTab('all')">
+        <span>Todas ({{ solicitudes.length }})</span>
+      </div>
+      <div class="tab" [ngClass]="{ 'active': activeTab === 'pending' }" (click)="changeTab('pending')">
+        <span>Pendientes ({{ pendientes }})</span>
+      </div>
+      <div class="tab" [ngClass]="{ 'active': activeTab === 'approved' }" (click)="changeTab('approved')">
+        <span>Aprobadas ({{ aprobadas }})</span>
+      </div>
+      <div class="tab" [ngClass]="{ 'active': activeTab === 'rejected' }" (click)="changeTab('rejected')">
+        <span>Rechazadas ({{ rechazadas }})</span>
+      </div>
+      <div class="tab" [ngClass]="{ 'active': activeTab === 'completed' }" (click)="changeTab('completed')">
+        <span>Completadas ({{ completadas }})</span>
+      </div>
+    </div>
+    
+    <!-- Lista de solicitudes -->
+    <div class="requests-list">
+      <app-solicitud-card-arrendador *ngFor="let solicitud of solicitudesFiltradas"
+        [propertyName]="solicitud.propiedadNombre"
+        [guestInitials]="getInitial(solicitud.arrendadorNombre)"
+        [guestName]="solicitud.arrendadorNombre"
+        [checkIn]="solicitud.fechaInicio"
+        [checkOut]="solicitud.fechaFin"
+        [totalAmount]="solicitud.montoTotal"
+        [requestId]="solicitud.id"
+        [status]="solicitud.estado">
+      </app-solicitud-card-arrendador>
+    </div>
+    
+    <!-- Modales -->
+    <!-- Modal de Detalles de Solicitud -->
+    <!-- <app-solicitud-details 
+      *ngIf="showDetailsModal"
+      [visible]="showDetailsModal"
+      [solicitudData]="selectedSolicitud"
+      (closeEvent)="closeDetailsModal()"
+      (approved)="approveRequest($event)"
+      (rejected)="rejectRequest($event)">
+    </app-solicitud-details> -->
+    
+    <!-- Modal de Calificación -->
+    <!-- <app-solicitud-calificacion
+      *ngIf="showReviewModal"
+      [visible]="showReviewModal"
+      [solicitud]="selectedSolicitud"
+      [guest]="selectedGuest"
+      (close)="closeReviewModal()"
+      (reviewSubmitted)="submitReview($event)">
+    </app-solicitud-calificacion> -->
+</div>

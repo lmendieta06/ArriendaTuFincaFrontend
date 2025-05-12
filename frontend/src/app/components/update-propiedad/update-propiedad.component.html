@@ -1,0 +1,80 @@
+<div class="modal-container" *ngIf="visible">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Editar Propiedad</h2>
+        <button class="close-button" (click)="closeModal()">&times;</button>
+      </div>
+  
+      <form (ngSubmit)="onSubmit()" #form="ngForm" class="modal-body">
+        <div class="section">
+          <h3 class="section-title">Información Básica</h3>
+  
+          <div class="form-group form-row">
+            <label class="form-label">Nombre <span class="required">*</span></label>
+            <input class="form-input" type="text" name="nombre" [(ngModel)]="propiedad.nombre" required />
+          </div>
+  
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Departamento <span class="required">*</span></label>
+              <select class="form-select" name="departamento" [(ngModel)]="propiedad.departamento" required (change)="onDepartamentoChange()">
+                <option value="">Seleccionar departamento</option>
+                <option *ngFor="let d of departamentos" [value]="d.nombre">{{ d.nombre }}</option>
+              </select>
+            </div>
+          </div>
+  
+          <div class="comment-container">
+            <textarea 
+                class="comment-input" 
+                name="descripcion" 
+                [(ngModel)]="propiedad.descripcion" 
+                rows="4" 
+                required></textarea>
+          </div>
+        </div>
+  
+        <div class="section">
+          <h3 class="section-title">Características</h3>
+  
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Habitaciones <span class="required">*</span></label>
+              <input class="form-input" type="number" name="habitaciones" [(ngModel)]="propiedad.capacidad" min="1" required />
+            </div>
+          </div>
+  
+          <div class="features-container form-row">
+            <label class="feature-label form-label">
+              <input type="checkbox" name="permiteMascotas" [(ngModel)]="caracteristicas.permiteMascotas" />
+              <span class="feature-text">Permite mascotas</span>
+            </label>
+            <label class="feature-label form-label">
+              <input type="checkbox" name="tienePiscina" [(ngModel)]="caracteristicas.tienePiscina" />
+              <span class="feature-text">Tiene piscina</span>
+            </label>
+            <label class="feature-label form-label">
+              <input type="checkbox" name="tieneAsador" [(ngModel)]="caracteristicas.tieneAsador" />
+              <span class="feature-text">Tiene asador</span>
+            </label>
+          </div>
+        </div>
+  
+        <div class="section">
+          <h3 class="section-title ">Precio</h3>
+          <div class="form-group form-row">
+            <label class="form-label">Valor por noche <span class="required">*</span></label>
+            <div class="price-input-container">
+              <span class="currency-symbol">$</span>
+              <input class="form-input price-input" type="number" name="valorNoche" [(ngModel)]="propiedad.precioPorDia" min="1" required />
+            </div>
+          </div>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-submit">Actualizar</button>
+        </div>
+      </form>
+    </div>
+  </div>

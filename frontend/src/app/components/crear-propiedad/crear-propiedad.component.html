@@ -1,0 +1,127 @@
+<div class="modal-container" *ngIf="visible">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Crear Nueva Propiedad</h2>
+        <button class="close-button" (click)="closeModal()">×</button>
+      </div>
+  
+      <form (ngSubmit)="onSubmit()" #form="ngForm" class="modal-body">
+        
+        <!-- Información Básica -->
+        <div class="section">
+          <h3 class="section-title">Información Básica</h3>
+  
+          <div class="form-group">
+            <label class="form-label">Nombre <span class="required"></span></label>
+            <input class="form-input" type="text" name="nombre" [(ngModel)]="propiedad.nombre" required placeholder="Ej: Finca El Paraíso" />
+            <div class="error-message" *ngIf="submitted && !propiedad.nombre">El nombre es obligatorio</div>
+          </div>
+  
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Departamento <span class="required"></span></label>
+              <select class="form-select" name="departamento" [(ngModel)]="propiedad.departamento" required (change)="onDepartamentoChange()">
+                <option value="">Seleccionar departamento</option>
+                <option *ngFor="let departamento of departamentos" [value]="departamento.nombre">{{ departamento.nombre }}</option>
+              </select>
+              <div class="error-message" *ngIf="submitted && !propiedad.departamento">El departamento es obligatorio</div>
+            </div>
+  
+            <div class="form-group">
+              <label class="form-label">Municipio <span class="required"></span></label>
+              <select class="form-select" name="municipio" [(ngModel)]="propiedad.municipio" [disabled]="!propiedad.departamento" required>
+                <option value="">Seleccionar municipio</option>
+                <option *ngFor="let municipio of municipiosFiltrados" [value]="municipio.nombre">{{ municipio.nombre }}</option>
+              </select>
+              <div class="error-message" *ngIf="submitted && !propiedad.municipio">El municipio es obligatorio</div>
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label class="form-label">Tipo de Ingreso <span class="required"></span></label>
+            <select class="form-select" name="tipoIngreso" [(ngModel)]="propiedad.tipoIngreso" required>
+              <option value="">Seleccionar tipo de ingreso</option>
+              <option value="MUNICIPIO">En el municipio</option>
+              <option value="CARRETERA_PRINCIPAL">Carretera principal</option>
+              <option value="CARRETERA_SECUNDARIA">Carretera secundaria</option>
+              <option value="CARRETERA_TERCIARIA">Carretera terciaria</option>
+            </select>
+            <div class="error-message" *ngIf="submitted && !propiedad.tipoIngreso">El tipo de ingreso es obligatorio</div>
+          </div>
+  
+            <div class="comment-container">
+                <textarea 
+                    class="comment-input" 
+                    name="descripcion" 
+                    placeholder="Has una descripción corta de tu propiedad"
+                    [(ngModel)]="propiedad.descripcion" 
+                    required></textarea>
+            </div>
+            <div class="error-message" *ngIf="submitted && !propiedad.descripcion">La descripción es obligatoria</div>
+        </div>
+  
+        <!-- Características -->
+        <div class="section">
+          <h3 class="section-title">Características</h3>
+  
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Habitaciones <span class="required"></span></label>
+              <input class="form-input" type="number" name="habitaciones" [(ngModel)]="propiedad.habitaciones" min="1" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Baños <span class="required"></span></label>
+              <input class="form-input" type="number" name="banos" [(ngModel)]="propiedad.banos" min="1" required />
+            </div>
+          </div>
+  
+          <div class="features-container">
+            <label class="feature-label">
+              <input type="checkbox" name="permiteMascotas" [(ngModel)]="propiedad.permiteMascotas" />
+              <span class="feature-text">Permite mascotas</span>
+            </label>
+            <label class="feature-label">
+              <input type="checkbox" name="tienePiscina" [(ngModel)]="propiedad.tienePiscina" />
+              <span class="feature-text">Tiene piscina</span>
+            </label>
+            <label class="feature-label">
+              <input type="checkbox" name="tieneAsador" [(ngModel)]="propiedad.tieneAsador" />
+              <span class="feature-text">Tiene asador</span>
+            </label>
+          </div>
+        </div>
+  
+        <!-- Precio -->
+        <div class="section">
+          <h3 class="section-title">Precio</h3>
+          <div class="form-group">
+            <label class="form-label">Valor por noche <span class="required"></span></label>
+            <div class="price-input-container">
+              <span class="currency-symbol">$</span>
+              <input class="form-input price-input" type="number" name="valorNoche" [(ngModel)]="propiedad.valorNoche" min="1" required />
+            </div>
+          </div>
+        </div>
+  
+        <!-- Imágenes -->
+        <div class="section">
+          <h3 class="section-title">Imágenes</h3>
+          <input type="file" multiple (change)="onFileSelected($event)" />
+          <div class="image-preview-container" *ngIf="selectedImages.length > 0">
+            <div class="image-preview" *ngFor="let img of selectedImages; let i = index">
+              <img [src]="img.preview" alt="preview" />
+              <button type="button" class="remove-image-button" (click)="removeImage(i)">×</button>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-submit">Crear Propiedad</button>
+        </div>
+  
+      </form>
+    </div>
+</div>
+  
