@@ -79,7 +79,6 @@ export class LoginService{
 
   // Guardar usuario y token en localStorage y actualizar BehaviorSubject
   private setUserData(user: UsuarioResponse, token: string): void {
-    localStorage.setItem('usuario', JSON.stringify(user));
     localStorage.setItem('token', token);
     this.currentUserSubject.next(user);
   }
