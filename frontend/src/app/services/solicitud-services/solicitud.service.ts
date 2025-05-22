@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { EstadoSolicitud } from '../../enums/estado_solicitud';
 import { Solicitud } from '../../models/solicitud.model';
-import axios from 'axios';
+import axios, {AxiosInstance} from 'axios';
+import { LoginService } from '../login_services/login.service';
 import { environment } from '../../../environments/environment';
 export interface SolicitudCreateDTO {
   propiedadId: number;
@@ -31,11 +32,25 @@ export interface SolicitudUpdateDTO {
 
 export class SolicitudService {
 
-  constructor() { }  
-  
+  private axios: AxiosInstance;
+
+  constructor(private loginService: LoginService) { 
+    this.axios = axios.create({
+      baseURL: environment.apiUrl,
+    })
+
+    // Interceptor para añadir el token JWT
+    this.axios.interceptors.request.use(config => {
+      const token = this.loginService.getToken();
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+      return config;
+    });
+  }  
   // Obtener todas las solicitudes
   getAllSolicitudes(): Promise<SolicitudSimple[]> {
-    return axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/listar`)
+    return this.axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/listar`)
       .then(response => {
         return response.data;
       })
@@ -47,7 +62,7 @@ export class SolicitudService {
 
   // Obtener solicitud por ID
   getSolicitudById(id: number): Promise<Solicitud> {
-    return axios.get<Solicitud>(`${environment.apiUrl}/solicitudes/buscar/${id}`)
+    return this.axios.get<Solicitud>(`${environment.apiUrl}/solicitudes/buscar/${id}`)
       .then(response => {
         return response.data;
       })
@@ -59,7 +74,7 @@ export class SolicitudService {
 
   // Obtener solicitudes por arrendador
   getSolicitudesByArrendador(arrendadorId: number): Promise<SolicitudSimple[]> {
-    return axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/buscarPorArrendador/${arrendadorId}`)
+    return this.axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/buscarPorArrendador/${arrendadorId}`)
       .then(response => {
         return response.data;
       })
@@ -71,7 +86,7 @@ export class SolicitudService {
 
   // Obtener solicitudes por arrendatario
   getSolicitudesByArrendatario(arrendatarioId: number): Promise<SolicitudSimple[]> {
-    return axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/buscarPorArrendatario/${arrendatarioId}`)
+    return this.axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/buscarPorArrendatario/${arrendatarioId}`)
       .then(response => {
         return response.data;
       })
@@ -83,7 +98,7 @@ export class SolicitudService {
 
   // Obtener solicitudes por propiedad
   getSolicitudesByPropiedad(propiedadId: number): Promise<SolicitudSimple[]> {
-    return axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/buscarPorPropiedad/${propiedadId}`)
+    return this.axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/buscarPorPropiedad/${propiedadId}`)
       .then(response => {
         return response.data;
       })
@@ -95,7 +110,7 @@ export class SolicitudService {
 
   // Obtener solicitudes por estado
   getSolicitudesByEstado(estado: EstadoSolicitud): Promise<SolicitudSimple[]> {
-    return axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/buscarPorEstado/${estado}`)
+    return this.axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/buscarPorEstado/${estado}`)
       .then(response => {
         return response.data;
       })
@@ -107,7 +122,7 @@ export class SolicitudService {
 
   // Obtener solicitudes por propiedad y estado
   getSolicitudesByPropiedadAndEstado(propiedadId: number, estado: EstadoSolicitud): Promise<SolicitudSimple[]> {
-    return axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/buscarPorPropiedadYEstado/${propiedadId}/${estado}`)
+    return this.axios.get<SolicitudSimple[]>(`${environment.apiUrl}/solicitudes/buscarPorPropiedadYEstado/${propiedadId}/${estado}`)
       .then(response => {
         return response.data;
       })
@@ -119,7 +134,7 @@ export class SolicitudService {
 
   // Verificar disponibilidad de fechas
   verificarDisponibilidadFechas(propiedadId: number, fechaInicio: string, fechaFin: string): Promise<boolean> {
-    return axios.get<boolean>(`${environment.apiUrl}/solicitudes/verificarDisponibilidad`, {
+    return this.axios.get<boolean>(`${environment.apiUrl}/solicitudes/verificarDisponibilidad`, {
       params: {
         propiedadId,
         fechaInicio,
@@ -137,7 +152,7 @@ export class SolicitudService {
 
   // Crear solicitud
   createSolicitud(arrendadorId: number, solicitud: SolicitudCreateDTO): Promise<Solicitud> {
-    return axios.post<Solicitud>(`${environment.apiUrl}/solicitudes/registrar/${arrendadorId}`, solicitud)
+    return this.axios.post<Solicitud>(`${environment.apiUrl}/solicitudes/registrar/${arrendadorId}`, solicitud)
       .then(response => {
         return response.data;
       })
@@ -149,7 +164,7 @@ export class SolicitudService {
 
   // Actualizar estado de solicitud
   updateEstadoSolicitud(id: number, solicitudUpdate: SolicitudUpdateDTO): Promise<Solicitud> {
-    return axios.put<Solicitud>(`${environment.apiUrl}/solicitudes/actualizar/${id}`, solicitudUpdate)
+    return this.axios.put<Solicitud>(`${environment.apiUrl}/solicitudes/actualizar/${id}`, solicitudUpdate)
       .then(response => {
         return response.data;
       })
@@ -161,7 +176,7 @@ export class SolicitudService {
 
   // Eliminar solicitud
   deleteSolicitud(id: number): Promise<void> {
-    return axios.delete(`${environment.apiUrl}/solicitudes/eliminar/${id}`)
+    return this.axios.delete(`${environment.apiUrl}/solicitudes/eliminar/${id}`)
       .then(() => {
         return;
       })
@@ -173,7 +188,7 @@ export class SolicitudService {
 
   // Reactivar solicitud
   reactivarSolicitud(id: number): Promise<Solicitud> {
-    return axios.put<Solicitud>(`${environment.apiUrl}/solicitudes/reactivar/${id}`)
+    return this.axios.put<Solicitud>(`${environment.apiUrl}/solicitudes/reactivar/${id}`)
       .then(response => {
         return response.data;
       })

@@ -6,7 +6,7 @@ import { Pago } from '../../models/pago.model';
 export interface PaymentCreateDTO {
   solicitudId: number;
   monto: number;
-  metodoPago: string;  // Debe coincidir con tu enum `MetodoPago`
+  metodoPago: string;  
   referenciaPago: string;
 }
 
@@ -14,7 +14,7 @@ export interface PaymentUpdateDTO {
   monto?: number;
   metodoPago?: string;
   referenciaPago?: string;
-  estadoPago?: string;  // Debe coincidir con tu enum `EstadoPago`
+  estadoPago?: string; 
 }
 
 @Injectable({

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { TipoCalificacion } from '../../enums/tipo_calificacion';
 import { Calificacion } from '../../models/calificacion.model';
-import axios from 'axios';
+import axios, {AxiosInstance} from 'axios';
+import { LoginService } from '../login_services/login.service';
 import { environment } from '../../../environments/environment';
 
 export interface CalificacionCreateDTO {
@@ -21,11 +22,26 @@ export interface CalificacionUpdateDTO {
 })
 export class GradeService {
 
-  constructor() { }
+  private axios: AxiosInstance;
+
+  constructor(private loginService: LoginService) { 
+    this.axios = axios.create({
+      baseURL: environment.apiUrl,
+    })
+
+    // Interceptor para añadir el token JWT
+    this.axios.interceptors.request.use(config => {
+      const token = this.loginService.getToken();
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+      return config;
+    });
+  }
 
   // Obtener una calificación por ID
   getCalificacionById(id: number): Promise<Calificacion> {
-    return axios.get<Calificacion>(`${environment.apiUrl}/calificaciones/buscar/${id}`)
+    return this.axios.get<Calificacion>(`${environment.apiUrl}/calificaciones/buscar/${id}`)
       .then(response => {
         return response.data;
       })
@@ -37,7 +53,7 @@ export class GradeService {
 
   // Obtener calificaciones por usuario
   getCalificacionesByUsuario(usuarioId: number): Promise<Calificacion[]> {
-    return axios.get<Calificacion[]>(`${environment.apiUrl}/calificaciones/buscarPorUsuario/${usuarioId}`)
+    return this.axios.get<Calificacion[]>(`${environment.apiUrl}/calificaciones/buscarPorUsuario/${usuarioId}`)
       .then(response => {
         return response.data;
       })
@@ -49,7 +65,7 @@ export class GradeService {
 
   // Obtener calificaciones por propiedad
   getCalificacionesByPropiedad(propiedadId: number): Promise<Calificacion[]> {
-    return axios.get<Calificacion[]>(`${environment.apiUrl}/calificaciones/buscarPorPropiedad/${propiedadId}`)
+    return this.axios.get<Calificacion[]>(`${environment.apiUrl}/calificaciones/buscarPorPropiedad/${propiedadId}`)
       .then(response => {
         return response.data;
       })
@@ -61,7 +77,7 @@ export class GradeService {
 
   // Obtener calificaciones por tipo
   getCalificacionesByTipo(tipoCalificacion: TipoCalificacion): Promise<Calificacion[]> {
-    return axios.get<Calificacion[]>(`${environment.apiUrl}/calificaciones/buscarPorTipo/${tipoCalificacion}`)
+    return this.axios.get<Calificacion[]>(`${environment.apiUrl}/calificaciones/buscarPorTipo/${tipoCalificacion}`)
       .then(response => {
         return response.data;
       })
@@ -73,7 +89,7 @@ export class GradeService {
 
   // Obtener promedio de puntuación por propiedad
   getPromedioPuntuacionPropiedad(propiedadId: number): Promise<number> {
-    return axios.get<number>(`${environment.apiUrl}/calificaciones/promedioPorPropiedad/${propiedadId}`)
+    return this.axios.get<number>(`${environment.apiUrl}/calificaciones/promedioPorPropiedad/${propiedadId}`)
       .then(response => {
         return response.data;
       })
@@ -85,7 +101,7 @@ export class GradeService {
 
   // Obtener promedio de puntuación por usuario y tipo de calificación
   getPromedioPuntuacionUsuario(usuarioId: number, tipoCalificacion: TipoCalificacion): Promise<number> {
-    return axios.get<number>(`${environment.apiUrl}/calificaciones/promedioPorUsuario/${usuarioId}/${tipoCalificacion}`)
+    return this.axios.get<number>(`${environment.apiUrl}/calificaciones/promedioPorUsuario/${usuarioId}/${tipoCalificacion}`)
       .then(response => {
         return response.data;
       })
@@ -97,7 +113,7 @@ export class GradeService {
 
   // Crear una nueva calificación
   createCalificacion(usuarioId: number, calificacion: CalificacionCreateDTO): Promise<Calificacion> {
-    return axios.post<Calificacion>(`${environment.apiUrl}/calificaciones/registrar/${usuarioId}`, calificacion)
+    return this.axios.post<Calificacion>(`${environment.apiUrl}/calificaciones/registrar/${usuarioId}`, calificacion)
       .then(response => {
         return response.data;
       })
@@ -109,7 +125,7 @@ export class GradeService {
 
   // Actualizar una calificación
   updateCalificacion(id: number, calificacion: CalificacionUpdateDTO): Promise<Calificacion> {
-    return axios.put<Calificacion>(`${environment.apiUrl}/calificaciones/actualizar/${id}`, calificacion)
+    return this.axios.put<Calificacion>(`${environment.apiUrl}/calificaciones/actualizar/${id}`, calificacion)
       .then(response => {
         return response.data;
       })
@@ -121,7 +137,7 @@ export class GradeService {
 
   // Eliminar (soft delete) una calificación
   deleteCalificacion(id: number): Promise<void> {
-    return axios.delete(`${environment.apiUrl}/calificaciones/eliminar/${id}`)
+    return this.axios.delete(`${environment.apiUrl}/calificaciones/eliminar/${id}`)
       .then(() => {
         return;
       })
@@ -133,7 +149,7 @@ export class GradeService {
 
   // Reactivar una calificación
   reactivarCalificacion(id: number): Promise<Calificacion> {
-    return axios.put<Calificacion>(`${environment.apiUrl}/calificaciones/reactivar/${id}`)
+    return this.axios.put<Calificacion>(`${environment.apiUrl}/calificaciones/reactivar/${id}`)
       .then(response => {
         return response.data;
       })
