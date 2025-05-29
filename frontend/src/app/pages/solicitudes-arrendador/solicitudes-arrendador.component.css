@@ -1,0 +1,211 @@
+.dashboard-content {
+    height: auto;
+    min-height: 100vh;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+  }
+
+
+  .welcome-section h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .welcome-section p {
+    color: #666;
+    margin-bottom: 30px;
+  }
+
+  form {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  /* Formulario */
+  .form-container {
+    display: flex;
+    gap: 15px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+    align-items: flex-end;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .form-group label {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  
+  .form-select, .date-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    background-color: white;
+  }
+  
+  .form-select:focus, .date-input:focus {
+    outline: none;
+    border-color: #8B4513;
+  }
+  
+  .form-btn {
+    background-color: #8B4513;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    height: 40px;
+  }
+  
+  .form-btn:hover {
+    background-color: #703605;
+  }
+
+
+  /* Header de solicitudes */
+  .requests-header {
+    margin-bottom: 25px;
+  }
+  
+  .requests-header h2 {
+    font-size: 24px;
+    color: #4a3520;
+    margin-bottom: 5px;
+  }
+  
+  .requests-header p {
+    font-size: 14px;
+    color: #777;
+    margin: 0;
+  }
+  /* Tabs de estados */
+  .tabs-container {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+  }
+  
+  .tab {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    position: relative;
+  }
+  
+  .tab:hover {
+    color: #8B4513;
+  }
+  
+  .tab.active {
+    color: #8B4513;
+    font-weight: 500;
+  }
+  
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #8B4513;
+  }
+  
+  /* Lista de solicitudes */
+  .requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  
+  /* Paginación */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 30px;
+  }
+  
+  .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  
+  .page-link:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .page-link.active {
+    background-color: #8B4513;
+    color: white;
+    border-color: #8B4513;
+  }
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .summary-cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .forms-container {
+      flex-wrap: wrap;
+    }
+    
+    .form-group {
+      min-width: calc(50% - 10px);
+    }
+    
+    .form-btn {
+      margin-top: 10px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-container {
+      flex-direction: column;
+    }
+    
+    .summary-cards {
+      grid-template-columns: 1fr;
+    }
+    
+    .form-group {
+      min-width: 100%;
+    }
+    
+    .tabs-container {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 5px;
+    }
+    
+    .tab {
+      padding: 12px 15px;
+    }
+}

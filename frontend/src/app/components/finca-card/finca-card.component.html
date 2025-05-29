@@ -1,0 +1,24 @@
+<!-- Resultados -->
+<div class="finca-card">
+    <div class="finca-card-image">
+      <img [src]="image" alt="Imagen de la finca" />
+    </div>
+    <div class="finca-card-content">
+      <h3>{{ fincaName }}</h3>
+      <p>{{ description }}</p>
+      <p><strong>Ubicación:</strong> {{ ubicacion }}</p>
+      <p><strong>Precio por día:</strong> ${{ precioPorDia }}</p>
+      <p><strong>Capacidad:</strong> {{ capacidad }}</p>
+      <p><strong>Disponible:</strong> 
+        <span class="status-badge"> {{ disponible }}</span>
+      </p>
+  
+      <!-- Botón en la esquina inferior izquierda -->
+      <div class="button-container">
+        <button  (click)="detalles.emit()">
+          Ver detalles
+        </button>
+      </div>
+    </div>
+  </div>
+  
