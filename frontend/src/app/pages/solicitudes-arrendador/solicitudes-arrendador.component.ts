@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SolicitudCardArrendadorComponent } from '../../components/solicitud-card-arrendador/solicitud-card-arrendador.component';
+import { SolicitudDetailsComponent } from '../../components/solicitud-details/solicitud-details.component';
+import { SolicitudCalificacionComponent } from '../../components/solicitud-calificacion/solicitud-calificacion.component';
 import { Solicitud } from '../../models/solicitud.model';
-import { SolicitudService, SolicitudSimple } from '../../services/solicitud-services/solicitud-services.service';
+import { SolicitudService, SolicitudSimple } from '../../services/solicitud-services/solicitud.service';
 import { LoginService } from '../../services/login_services/login.service';
 import { EstadoSolicitud } from '../../enums/estado_solicitud';
 
@@ -20,7 +22,9 @@ interface FilterOptions {
   imports: [
     CommonModule, 
     FormsModule,
-    SolicitudCardArrendadorComponent
+    SolicitudCardArrendadorComponent,
+    SolicitudDetailsComponent,
+    SolicitudCalificacionComponent
   ],
   templateUrl: './solicitudes-arrendador.component.html',
   styleUrl: './solicitudes-arrendador.component.css'
@@ -61,7 +65,8 @@ export class SolicitudesArrendadorComponent implements OnInit {
     private loginService: LoginService
   ) {}
 
-  ngOnInit(): void {
+
+  /*ngOnInit(): void {
     this.loading = true;
     this.error = null;
     
@@ -73,7 +78,62 @@ export class SolicitudesArrendadorComponent implements OnInit {
     }
     this.cargarSolicitudes(userId);
   }
+  }*/
+
+  ngOnInit(): void {
+    this.solicitudes = [
+      {
+        id: 1,
+        propiedadNombre: 'Finca El Paraíso',
+        direccion: 'Santa Elena, Medellín, Antioquia',
+        arrendadorNombre: 'Carlos Rodríguez',
+        fechaInicio: '2025-05-10',
+        fechaFin: '2025-05-15',
+        montoTotal: 1750000,
+        estado: EstadoSolicitud.PENDIENTE
+      },
+      {
+        id: 2,
+        propiedadNombre: 'Rancho La Esperanza',
+        direccion: 'Guarne, Antioquia',
+        arrendadorNombre: 'María Gómez',
+        fechaInicio: '2025-04-05',
+        fechaFin: '2025-04-10',
+        montoTotal: 2200000,
+        estado: EstadoSolicitud.APROBADA
+      },
+      {
+        id: 3,
+        propiedadNombre: 'Cabaña Niebla',
+        direccion: 'Santa Fe de Antioquia',
+        arrendadorNombre: 'Luis Mendoza',
+        fechaInicio: '2025-03-18',
+        fechaFin: '2025-03-21',
+        montoTotal: 980000,
+        estado: EstadoSolicitud.RECHAZADA
+      },
+      {
+        id: 4,
+        propiedadNombre: 'Lote Campestre',
+        direccion: 'Rionegro, Antioquia',
+        arrendadorNombre: 'Sandra López',
+        fechaInicio: '2025-01-10',
+        fechaFin: '2025-01-12',
+        montoTotal: 600000,
+        estado: EstadoSolicitud.COMPLETADA
+      }
+    ];
     
+    this.solicitudesFiltradas = [...this.solicitudes];
+    this.loading = false;
+    
+    // Contadores
+    this.pendientes = this.solicitudes.filter(s => s.estado === EstadoSolicitud.PENDIENTE).length;
+    this.aprobadas = this.solicitudes.filter(s => s.estado === EstadoSolicitud.APROBADA).length;
+    this.rechazadas = this.solicitudes.filter(s => s.estado === EstadoSolicitud.RECHAZADA).length;
+    this.completadas = this.solicitudes.filter(s => s.estado === EstadoSolicitud.COMPLETADA).length;
+    
+  }
 
   getInitial(userName: string): string {
     if (userName && userName.length > 0) {
@@ -108,7 +168,9 @@ export class SolicitudesArrendadorComponent implements OnInit {
         }
       }
     })
-    .catch((error: any) => {
+
+
+    .catch((error) => {
       console.error('Error al cargar solicitudes del arrendador:', error);
       this.error = 'No se pudieron cargar sus solicitudes. Por favor, intente de nuevo más tarde.';
       this.loading = false;

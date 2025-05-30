@@ -4,7 +4,7 @@ import { catchError, map } from 'rxjs';
 import axios, { AxiosInstance, AxiosResponse }from 'axios';
 import { TipoUsuario } from '../../enums/tipo_usuario';
 import { environment } from '../../../environments/environment';
-
+import { TokenResponse } from '../../models/token_response';
 export interface LoginDTO {
   email: string;
   password: string;
@@ -38,7 +38,14 @@ export class LoginService{
     // Configurar instancia de Axios
     this.axios = axios.create({
       baseURL: this.apiUrl,
-      withCredentials: true // Importante para incluir cookies de sesión
+    });
+    // Interceptor para añadir token JWT en cada solicitud
+    this.axios.interceptors.request.use(config => {
+      const token = this.getToken();
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+      return config;
     });
 
     // Interceptor para manejar errores de autenticación
@@ -46,7 +53,7 @@ export class LoginService{
       response => response,
       error => {
         if (error.response && [401, 403].includes(error.response.status) && this.isAuthenticated()) {
-          // Si recibimos un 401 o 403 y estamos "autenticados", la sesión ha expirado
+          // Si recibimos un 401 o 403 y estamos "autenticados", el token ha expirado
           this.clearUserData();
         }
         return Promise.reject(error);
@@ -65,45 +72,39 @@ export class LoginService{
     return storedUser ? JSON.parse(storedUser) : null;
   }
 
-  // Guardar usuario en localStorage y actualizar BehaviorSubject
-  private setUserData(user: UsuarioResponse): void {
-    localStorage.setItem('usuario', JSON.stringify(user));
+    // Obtener token JWT del localStorage
+  public getToken(): string | null {
+    return localStorage.getItem('token');
+  }  
+
+  // Guardar usuario y token en localStorage y actualizar BehaviorSubject
+  private setUserData(user: UsuarioResponse, token: string): void {
+    localStorage.setItem('token', token);
     this.currentUserSubject.next(user);
   }
 
   // Limpiar datos del usuario
   private clearUserData(): void {
     localStorage.removeItem('usuario');
+    localStorage.removeItem('token');
     this.currentUserSubject.next(null);
   }
 
   // Iniciar sesión
   login(email: string, password: string): Observable<UsuarioResponse> {
-    return from(this.axios.post<UsuarioResponse>(
+    return from(this.axios.post<TokenResponse>(
       '/login',
       { email, password }
     )).pipe(
-      map((response: AxiosResponse<UsuarioResponse>) => {
+      map((response: AxiosResponse<TokenResponse>) => {
         // Obtener datos del cuerpo de la respuesta
-        const userData = response.data;
+        const tokenData = response.data;
+        const userData = tokenData.usuario;
         
-        // Obtener headers con información del usuario
-        const userId = response.headers['x-usuario-id'];
-        const userName = response.headers['x-usuario-nombre'];
-        const userType = response.headers['x-usuario-tipo'];
+        // Guardar datos del usuario y token
+        this.setUserData(userData, tokenData.token);
         
-        // Combinar datos del cuerpo y headers
-        const user: UsuarioResponse = {
-          id: userId ? Number(userId) : userData.id,
-          nombre: userName || userData.nombre,
-          email: userData.email,
-          tipoUsuario: (userType as TipoUsuario) || userData.tipoUsuario
-        };
-        
-        // Guardar datos del usuario
-        this.setUserData(user);
-        
-        return user;
+        return userData;
       }),
       catchError(error => {
         if (error.response) {
@@ -125,36 +126,16 @@ export class LoginService{
 
   // Cerrar sesión
   logout(): Observable<void> {
-    return from(this.axios.post<void>('/logout')).pipe(
-      map(() => {
-        this.clearUserData();
-      }),
-      catchError(error => {
-        console.error('Error al cerrar sesión:', error);
-        this.clearUserData(); // Limpiar de todos modos
-        return throwError(() => new Error('Error al cerrar sesión'));
-      })
-    );
-  }
-
-  // Verificar si el usuario tiene un rol específico
-  hasRole(requiredRole: TipoUsuario): boolean {
-    const user = this.currentUserValue;
-    if (!user) return false;
-    
-    return user.tipoUsuario === requiredRole;
-  }
-
-  // Verificar si el usuario puede acceder basado en roles permitidos
-  canAccess(allowedRoles: TipoUsuario[]): boolean {
-    const user = this.currentUserValue;
-    if (!user) return false;
-    
-    return allowedRoles.includes(user.tipoUsuario);
+    // Aquí puedes considerar invalidar el token en el servidor si tienes un endpoint para eso
+    this.clearUserData();
+    return new Observable<void>(observer => {
+      observer.next();
+      observer.complete();
+    });
   }
 
   // Verificar si el usuario está autenticado
   isAuthenticated(): boolean {
-    return !!this.currentUserValue;
+    return !!this.currentUserValue && !!this.getToken();
   }
 }

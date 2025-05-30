@@ -14,14 +14,15 @@
                     <option *ngFor="let propiedad of propiedad" [value]="propiedad">{{ propiedad }}</option>
                 </select>
             </div>
-      
+
             <div class="form-group">
                 <label for="status">Estado</label>
                 <select class="form-select" id="status" [(ngModel)]="filters.status" name="status">
-                    <option *ngFor="let estado of estado" aria-placeholder="Todos los estados" [value]="estado">{{ estado }}</option>
+                  <option *ngFor="let estado of estado" aria-placeholder="Todos los estados" [value]="estado">{{ estado }}</option>
                 </select>
             </div>
       
+<<<<<<< HEAD
             <div class="form-group date">
                 <label for="startDate">Fecha de Inicio</label>
                 <input type="date" id="startDate" [(ngModel)]="filters.startDate" name="startDate" class="date-input" />

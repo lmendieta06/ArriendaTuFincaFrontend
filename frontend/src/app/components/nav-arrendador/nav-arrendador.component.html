@@ -1,1 +1,38 @@
-<p>nav-arrendador works!</p>
+<div class="sidebar">
+    <!-- Perfil del usuario -->
+    <div class="user-profile">
+      <div class="avatar">
+        <span>{{getInitial()}}</span>
+      </div>
+      <div class="user-info">
+        <h3>{{userName}}</h3>
+        <p>{{userType}}</p>
+      </div>
+    </div>
+  
+    <!-- Menú de navegación -->
+    <nav class="navigation">
+      <ul>
+        <li [routerLinkActive]="'active'" [routerLinkActiveOptions]="{exact: true}">
+          <a routerLink='/home-arrendador'>
+            <i class="material-icons">dashboard</i>
+            <span>Panel Principal</span>
+          </a>
+        </li>
+        <li [routerLinkActive]="'active'">
+          <a routerLink='/home-arrendador/solicitudes'>
+            <i class="material-icons">description</i>
+            <span>Solicitudes</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  
+    <!-- Cerrar sesión -->
+    <div class="logout">
+      <a (click)="logout()">
+        <i class="material-icons">exit_to_app</i>
+        <span>Cerrar Sesión</span>
+      </a>
+    </div>
+  </div>

@@ -32,3 +32,7 @@ export class FincaCardComponent {
   }
 
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin

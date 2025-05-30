@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+<<<<<<< HEAD
+=======
+import { ActivatedRoute } from '@angular/router';
+>>>>>>> origin
 
 @Component({
   selector: 'app-pago-arriendo',
@@ -9,4 +13,15 @@ import { Component } from '@angular/core';
 })
 export class PagoArriendoComponent {
 
+<<<<<<< HEAD
+=======
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log('ID recibido:', id);
+  }
+
+
+>>>>>>> origin
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FarmCardComponent } from '../../components/farm-card/farm-card.component';
 import { LoginService } from '../../services/login_services/login.service';
-import { PropertyService, PropiedadSimple } from '../../services/property-services/property.service';
+import { PropertyService, PropiedadDetalle, PropiedadSimple } from '../../services/property-services/property.service';
 
 @Component({
   selector: 'app-dashboard-arrendatario',
@@ -14,13 +14,13 @@ import { PropertyService, PropiedadSimple } from '../../services/property-servic
 })
 export class DashboardArrendatarioComponent {
   userName: string = '';
-  propiedades: PropiedadSimple[] = [];
+  propiedades: PropiedadDetalle[] = [];
   loading = true;
   error: string | null = null;
   activeProperties : number = 0;
   solicitudesPendientes : number = 0;
   arriendos:number = 0;
-  calificacionPromedio : number = 4;
+  calificacionPromedio : number = 0;
 
   constructor(private loginService: LoginService, private propiedadService:PropertyService) { }
   
@@ -55,6 +55,25 @@ export class DashboardArrendatarioComponent {
         this.propiedades = propiedades;
         this.activeProperties = this.propiedades.length;
         this.loading = false;
+
+        // Calcular la calificación promedio correctamente
+        let sumCalificaciones = 0;
+        let countCalificaciones = 0;
+
+        // Usar for...of para iterar sobre los valores, no las propiedades
+        for (const propiedad of this.propiedades) {
+          sumCalificaciones += propiedad.calificacionPromedio;
+          countCalificaciones++;
+        
+          // Contar solicitudes pendientes
+          if (propiedad.solicitudes) {
+            this.solicitudesPendientes += propiedad.solicitudes.filter(s => s.estado === 'PENDIENTE').length;
+            this.arriendos += propiedad.solicitudes.filter(s => s.estado === 'APROBADA' || s.estado === 'COMPLETADA' ).length;
+          }
+        }
+
+        this.calificacionPromedio = Number((sumCalificaciones / propiedades.length).toFixed(1));
+        
       })
       .catch((error) => {
         console.error('Error al cargar mis propiedades:', error);

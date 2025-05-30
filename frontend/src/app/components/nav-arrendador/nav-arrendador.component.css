@@ -1,0 +1,111 @@
+/* Estilos para el sidebar */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Perfil de usuario */
+  .user-profile {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #d68c45;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 15px;
+  }
+  
+  .user-info h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .user-info p {
+    margin: 0;
+    font-size: 14px;
+    color: #888;
+  }
+  
+  /* Navegación */
+  .navigation {
+    flex: 1;
+  }
+  
+  .navigation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Estilos para los elementos activos e inactivos */
+.navigation li {
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+}
+
+.navigation li a {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #666;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.navigation li:not(.active) a:hover {
+  background-color: #f9f9f9;
+  color: #9e4a36;
+}
+
+.navigation li.active a {
+  background-color: #9e4a36;
+  color: white;
+  border-left: 3px solid #7a3a2a;
+  font-weight: 600;
+}
+
+/* Asegurar que solo el activo tenga estos estilos */
+.navigation li:not(.active) a {
+  background-color: transparent;
+  border-left: 3px solid transparent;
+}
+  
+  /* Cerrar sesión */
+  .logout {
+    padding: 20px;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .logout a {
+    display: flex;
+    align-items: center;
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .logout a:hover {
+    color: #9e4a36;
+  }
+  
+  .logout i {
+    margin-right: 10px;
+    font-size: 20px;
+  }

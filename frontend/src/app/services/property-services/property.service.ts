@@ -3,14 +3,15 @@ import { environment } from '../../../environments/environment';
 import { Propiedad } from '../../models/propiedad.model';
 import { Solicitud } from '../../models/solicitud.model';
 import { Calificacion } from '../../models/calificacion.model';
-import axios from 'axios';
-
+import axios, {AxiosInstance} from 'axios';
+import { LoginService } from '../login_services/login.service';
 export interface PropiedadSimple {
   id: number;
   nombre: string;
   descripcion: string;
   ubicacion: string;
   precioPorDia: number;
+  capacidad: number;
   disponible: boolean;
   imagen: string;
 }
@@ -19,6 +20,7 @@ export interface PropiedadDetalle extends Propiedad {
   solicitudes: Solicitud[];
   calificaciones: Calificacion[];
   imagen: string;
+  calificacionPromedio:number;
 }
 
 export interface PropiedadCreateDTO {
@@ -47,12 +49,26 @@ export interface PropiedadUpdateDTO {
   providedIn: 'root'
 })
 export class PropertyService {
+  private axios: AxiosInstance;
 
-  constructor() { }
+  constructor(private loginService: LoginService) { 
+    this.axios = axios.create({
+      baseURL: environment.apiUrl,
+    })
+
+    // Interceptor para añadir el token JWT
+    this.axios.interceptors.request.use(config => {
+      const token = this.loginService.getToken();
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+      return config;
+    });
+  }
 
   // Obtener todas las propiedades
   getAllPropiedades(): Promise<PropiedadSimple[]> {
-    return axios.get<PropiedadSimple[]>(`${environment.apiUrl}/propiedades/listar`)
+    return this.axios.get<PropiedadSimple[]>(`${environment.apiUrl}/propiedades/listar`)
       .then(response => {
         return response.data;
       })
@@ -64,7 +80,7 @@ export class PropertyService {
 
   // Obtener propiedad por ID
   getPropiedadById(id: number): Promise<Propiedad> {
-    return axios.get<Propiedad>(`${environment.apiUrl}/propiedades/buscar/${id}`)
+    return this.axios.get<Propiedad>(`${environment.apiUrl}/propiedades/buscar/${id}`)
       .then(response => {
         return response.data;
       })
@@ -76,7 +92,7 @@ export class PropertyService {
 
   // Obtener detalle de propiedad por ID
   getPropiedadDetalleById(id: number): Promise<PropiedadDetalle> {
-    return axios.get<PropiedadDetalle>(`${environment.apiUrl}/propiedades/detalle/${id}`)
+    return this.axios.get<PropiedadDetalle>(`${environment.apiUrl}/propiedades/detalle/${id}`)
       .then(response => {
         return response.data;
       })
@@ -88,7 +104,7 @@ export class PropertyService {
 
   // Obtener propiedades por arrendatario
   getPropiedadesByArrendatario(arrendatarioId: number): Promise<PropiedadDetalle[]> {
-    return axios.get<PropiedadDetalle[]>(`${environment.apiUrl}/propiedades/buscarPorArrendatario/${arrendatarioId}`)
+    return this.axios.get<PropiedadDetalle[]>(`${environment.apiUrl}/propiedades/buscarPorArrendatario/${arrendatarioId}`)
       .then(response => {
         return response.data;
       })
@@ -100,7 +116,7 @@ export class PropertyService {
 
   // Obtener propiedades disponibles
   getPropiedadesDisponibles(): Promise<PropiedadSimple[]> {
-    return axios.get<PropiedadSimple[]>(`${environment.apiUrl}/propiedades/listarDisponibles`)
+    return this.axios.get<PropiedadSimple[]>(`${environment.apiUrl}/propiedades/listarDisponibles`)
       .then(response => {
         return response.data;
       })
@@ -112,7 +128,7 @@ export class PropertyService {
 
   // Obtener propiedades por ubicación
   getPropiedadesByUbicacion(ubicacion: string): Promise<PropiedadSimple[]> {
-    return axios.get<PropiedadSimple[]>(`${environment.apiUrl}/propiedades/buscarPorUbicacion`, {
+    return this.axios.get<PropiedadSimple[]>(`${environment.apiUrl}/propiedades/buscarPorUbicacion`, {
       params: { ubicacion }
     })
       .then(response => {
@@ -126,7 +142,7 @@ export class PropertyService {
 
   // Obtener propiedades por ciudad
   getPropiedadesByCiudad(ciudad: string): Promise<PropiedadSimple[]> {
-    return axios.get<PropiedadSimple[]>(`${environment.apiUrl}/propiedades/buscarPorCiudad/${ciudad}`)
+    return this.axios.get<PropiedadSimple[]>(`${environment.apiUrl}/propiedades/buscarPorCiudad/${ciudad}`)
       .then(response => {
         return response.data;
       })
@@ -138,7 +154,7 @@ export class PropertyService {
 
   // Obtener propiedades por departamento
   getPropiedadesByDepartamento(departamento: string): Promise<PropiedadSimple[]> {
-    return axios.get<PropiedadSimple[]>(`${environment.apiUrl}/propiedades/buscarPorDepartamento/${departamento}`)
+    return this.axios.get<PropiedadSimple[]>(`${environment.apiUrl}/propiedades/buscarPorDepartamento/${departamento}`)
       .then(response => {
         return response.data;
       })
@@ -150,7 +166,7 @@ export class PropertyService {
 
   // Obtener calificación promedio de una propiedad
   getCalificacionPromedio(id: number): Promise<number> {
-    return axios.get<number>(`${environment.apiUrl}/propiedades/calificacionPromedio/${id}`)
+    return this.axios.get<number>(`${environment.apiUrl}/propiedades/calificacionPromedio/${id}`)
       .then(response => {
         return response.data;
       })
@@ -162,7 +178,7 @@ export class PropertyService {
 
   // Crear una nueva propiedad
   createPropiedad(arrendatarioId: number, propiedad: PropiedadCreateDTO): Promise<Propiedad> {
-    return axios.post<Propiedad>(`${environment.apiUrl}/propiedades/registrar/${arrendatarioId}`, propiedad)
+    return this.axios.post<Propiedad>(`${environment.apiUrl}/propiedades/registrar/${arrendatarioId}`, propiedad)
       .then(response => {
         return response.data;
       })
@@ -174,7 +190,7 @@ export class PropertyService {
 
   // Actualizar una propiedad
   updatePropiedad(id: number, propiedad: PropiedadUpdateDTO): Promise<Propiedad> {
-    return axios.put<Propiedad>(`${environment.apiUrl}/propiedades/actualizar/${id}`, propiedad)
+    return this.axios.put<Propiedad>(`${environment.apiUrl}/propiedades/actualizar/${id}`, propiedad)
       .then(response => {
         return response.data;
       })
@@ -186,7 +202,7 @@ export class PropertyService {
 
   // Eliminar (soft delete) una propiedad
   deletePropiedad(id: number): Promise<void> {
-    return axios.delete(`${environment.apiUrl}/propiedades/eliminar/${id}`)
+    return this.axios.delete(`${environment.apiUrl}/propiedades/eliminar/${id}`)
       .then(response => {
         return;
       })
@@ -198,7 +214,7 @@ export class PropertyService {
 
   // Reactivar una propiedad
   reactivarPropiedad(id: number): Promise<Propiedad> {
-    return axios.put<Propiedad>(`${environment.apiUrl}/propiedades/reactivar/${id}`)
+    return this.axios.put<Propiedad>(`${environment.apiUrl}/propiedades/reactivar/${id}`)
       .then(response => {
         return response.data;
       })
