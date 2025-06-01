@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PropertyService, PropiedadSimple } from '../../services/property-services/property.service';
 import { Router } from '@angular/router';
 import { FincaCardComponent } from '../../components/finca-card/finca-card.component';
+import { LoginService } from '../../services/login_services/login.service';
 
 @Component({
   selector: 'app-dashboard-arrendador',
@@ -18,21 +19,39 @@ import { FincaCardComponent } from '../../components/finca-card/finca-card.compo
 })
 
 export class DashboardArrendadorComponent  implements OnInit {
-
   userName: string = '';
   propiedades: PropiedadSimple[] = [];
+  showDetailsModal: boolean = false;
+  selectedPropiedad: any = null;
   propiedadesOriginal: PropiedadSimple[] = [];
+  selectedGuest: any = null;
+  fechaInicio: string = '';
+  fechaFin: string = '';
+  solicitudEnviada: boolean = false;
+  
   filtros = {
     nombre: '',
     ubicacion: '',
     personas: 0
   };
 
-  ciudades: string[] = ['Bogotá', 'Medellín', 'Cali'];
-  constructor(private propertyService: PropertyService, private router: Router) { }
+  ciudades: string[] = ['','Bogotá', 'Medellín', 'Cali'];
+  constructor(private loginService: LoginService, private propertyService: PropertyService, private router: Router) { }
 
   
   ngOnInit(): void {
+
+    // Suscribirse a los cambios del usuario actual
+    this.loginService.currentUser.subscribe(user => {
+      if (user) {
+        this.userName = user.nombre;
+      } else {
+        this.userName = '';
+      }
+    });
+
+
+
     this.propertyService.getPropiedadesDisponibles()
     .then(data => {
       this.propiedades = data;
@@ -67,7 +86,27 @@ export class DashboardArrendadorComponent  implements OnInit {
   }
   
 
-  verDetalles(id: number): void {
-      this.router.navigate(['/propiedad', id]);
+  viewDetails(requestId: number): void {
+    this.selectedPropiedad = this.propiedades.find(p => p.id === requestId);
+    if (this.selectedPropiedad) {
+      this.showDetailsModal = true;
+    }
   }
+  
+  closeDetailsModal(): void {
+    this.showDetailsModal = false;
+    this.selectedPropiedad = null;
+  }
+
+  solicitarArriendo() {
+    // Lógica real de solicitud
+    this.solicitudEnviada = true;
+  }
+
+  pagar() {
+    // Redirige o procesa el pago
+    alert('Redirigiendo a la pasarela de pago...');
+  }
+
+  
 }

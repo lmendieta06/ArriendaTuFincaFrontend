@@ -1,16 +1,9 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-<<<<<<< HEAD
-import { SolicitudService } from '../../services/solicitud-services/solicitud-services.service';
-import { Solicitud } from '../../models/solicitud.model';
-import { EstadoSolicitud } from '../../enums/estado_solicitud';
-import { SolicitudUpdateDTO } from '../../services/solicitud-services/solicitud-services.service';
-=======
 import { SolicitudService } from '../../services/solicitud-services/solicitud.service';
 import { Solicitud } from '../../models/solicitud.model';
 import { EstadoSolicitud } from '../../enums/estado_solicitud';
 import { SolicitudUpdateDTO } from '../../services/solicitud-services/solicitud.service';
->>>>>>> origin
 import { ActivatedRoute, Router } from '@angular/router';
 import { Pago } from '../../models/pago.model';
 
@@ -63,11 +56,7 @@ export class SolicitudCardArrendadorComponent {
         
         this.totalAmount = data.montoTotal;
       })
-<<<<<<< HEAD
-      .catch((error: any) => {
-=======
       .catch(error => {
->>>>>>> origin
         console.error('Error al cargar detalles de solicitud:', error);
       });
   }
@@ -111,11 +100,8 @@ export class SolicitudCardArrendadorComponent {
         this.rejectRequestEvent.emit(this.requestId);
       }
     })
-<<<<<<< HEAD
-    .catch((error: any) => {
-=======
+
     .catch(error => {
->>>>>>> origin
       console.error(`Error al actualizar estado a ${estado}:`, error);
     });
   }
@@ -171,10 +157,4 @@ export class SolicitudCardArrendadorComponent {
       }
     }
   }
-  
-
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin

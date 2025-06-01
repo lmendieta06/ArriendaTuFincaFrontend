@@ -81,59 +81,17 @@ export class SolicitudesArrendadorComponent implements OnInit {
   }*/
 
   ngOnInit(): void {
-    this.solicitudes = [
-      {
-        id: 1,
-        propiedadNombre: 'Finca El Paraíso',
-        direccion: 'Santa Elena, Medellín, Antioquia',
-        arrendadorNombre: 'Carlos Rodríguez',
-        fechaInicio: '2025-05-10',
-        fechaFin: '2025-05-15',
-        montoTotal: 1750000,
-        estado: EstadoSolicitud.PENDIENTE
-      },
-      {
-        id: 2,
-        propiedadNombre: 'Rancho La Esperanza',
-        direccion: 'Guarne, Antioquia',
-        arrendadorNombre: 'María Gómez',
-        fechaInicio: '2025-04-05',
-        fechaFin: '2025-04-10',
-        montoTotal: 2200000,
-        estado: EstadoSolicitud.APROBADA
-      },
-      {
-        id: 3,
-        propiedadNombre: 'Cabaña Niebla',
-        direccion: 'Santa Fe de Antioquia',
-        arrendadorNombre: 'Luis Mendoza',
-        fechaInicio: '2025-03-18',
-        fechaFin: '2025-03-21',
-        montoTotal: 980000,
-        estado: EstadoSolicitud.RECHAZADA
-      },
-      {
-        id: 4,
-        propiedadNombre: 'Lote Campestre',
-        direccion: 'Rionegro, Antioquia',
-        arrendadorNombre: 'Sandra López',
-        fechaInicio: '2025-01-10',
-        fechaFin: '2025-01-12',
-        montoTotal: 600000,
-        estado: EstadoSolicitud.COMPLETADA
-      }
-    ];
+    this.loading = true;
+    this.error = null;
     
-    this.solicitudesFiltradas = [...this.solicitudes];
-    this.loading = false;
-    
-    // Contadores
-    this.pendientes = this.solicitudes.filter(s => s.estado === EstadoSolicitud.PENDIENTE).length;
-    this.aprobadas = this.solicitudes.filter(s => s.estado === EstadoSolicitud.APROBADA).length;
-    this.rechazadas = this.solicitudes.filter(s => s.estado === EstadoSolicitud.RECHAZADA).length;
-    this.completadas = this.solicitudes.filter(s => s.estado === EstadoSolicitud.COMPLETADA).length;
-    
-  }
+    const userId = this.loginService.getUserId();
+    if (!userId) {
+      this.error = 'Debe iniciar sesión para ver sus solicitudes.';
+      this.loading = false;
+      return;
+    }
+    this.cargarSolicitudes(userId);
+  } 
 
   getInitial(userName: string): string {
     if (userName && userName.length > 0) {

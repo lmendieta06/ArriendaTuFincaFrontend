@@ -23,7 +23,7 @@ export const routes: Routes = [
     {path: 'solicitudes', component: SolicitudesArrendatarioComponent, title:"Solicitudes Recibidas"}
   ]},
   { path: 'home-arrendador', component: HomeArrendadorComponent, title:"Panel de control", children:[
-    {path: '', component: DashboardArrendadorComponent, title:"Panel Arrendatario"},
+    {path: '', component: DashboardArrendadorComponent, title:"Panel Arrendador"},
     {path: 'solicitudes', component: SolicitudesArrendadorComponent, title:"Solicitudes Recibidas"},
     { path: 'pago/:id', component: PagoArriendoComponent, title:"Pago de Arriendo" },
     { path: 'calificacion/:id', component: CalificacionArrendatarioComponent, title:"Calificacion Arrendatario" },
