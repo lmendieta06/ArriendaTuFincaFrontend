@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SolicitudCardArrendadorComponent } from '../../components/solicitud-card-arrendador/solicitud-card-arrendador.component';
-import { SolicitudDetailsComponent } from '../../components/solicitud-details/solicitud-details.component';
+import { SolicitudDetailsArrendadorComponent } from '../../components/solicitud-details-arrendador/solicitud-details-arrendador.component';
 import { SolicitudCalificacionComponent } from '../../components/solicitud-calificacion/solicitud-calificacion.component';
 import { Solicitud } from '../../models/solicitud.model';
 import { SolicitudService, SolicitudSimple } from '../../services/solicitud-services/solicitud.service';
@@ -23,7 +23,7 @@ interface FilterOptions {
     CommonModule, 
     FormsModule,
     SolicitudCardArrendadorComponent,
-    SolicitudDetailsComponent,
+    SolicitudDetailsArrendadorComponent,
     SolicitudCalificacionComponent
   ],
   templateUrl: './solicitudes-arrendador.component.html',
@@ -40,6 +40,7 @@ export class SolicitudesArrendadorComponent implements OnInit {
   totalAmount: number = 0;
   aprobadas: number = 0;
   rechazadas: number = 0;
+  modalTipo: string = ''; // puede ser 'detalles', 'calificacion', etc.
 
   // Propiedades para el HTML
   activeTab: string = 'all';
@@ -47,7 +48,8 @@ export class SolicitudesArrendadorComponent implements OnInit {
   showReviewModal: boolean = false;
   selectedSolicitud: any = null;
   selectedGuest: any = null;
-  
+  showCompletadaModal: boolean = false;
+
   // Filtros
   filters: FilterOptions = {
     property: 'all',
@@ -66,20 +68,6 @@ export class SolicitudesArrendadorComponent implements OnInit {
   ) {}
 
 
-  /*ngOnInit(): void {
-    this.loading = true;
-    this.error = null;
-    
-    const userId = this.loginService.getUserId();
-    if (!userId) {
-      this.error = 'Debe iniciar sesión para ver sus solicitudes.';
-      this.loading = false;
-      return;
-    }
-    this.cargarSolicitudes(userId);
-  }
-  }*/
-
   ngOnInit(): void {
     this.loading = true;
     this.error = null;
@@ -91,6 +79,26 @@ export class SolicitudesArrendadorComponent implements OnInit {
       return;
     }
     this.cargarSolicitudes(userId);
+  
+
+  
+      
+    this.solicitudesFiltradas = [...this.solicitudes];
+    this.loading = false;
+    
+    // Contadores
+    this.actualizarContadores();
+    /*
+    this.loading = true;
+    this.error = null;
+    
+    const userId = this.loginService.getUserId();
+    if (!userId) {
+      this.error = 'Debe iniciar sesión para ver sus solicitudes.';
+      this.loading = false;
+      return;
+    }
+    this.cargarSolicitudes(userId);*/
   } 
 
   getInitial(userName: string): string {
@@ -99,6 +107,14 @@ export class SolicitudesArrendadorComponent implements OnInit {
     }
     return '';
   }
+
+  private actualizarContadores(): void {
+  this.pendientes = this.solicitudes.filter(s => s.estado === EstadoSolicitud.PENDIENTE).length;
+  this.aprobadas = this.solicitudes.filter(s => s.estado === EstadoSolicitud.APROBADA).length;
+  this.rechazadas = this.solicitudes.filter(s => s.estado === EstadoSolicitud.RECHAZADA).length;
+  this.completadas = this.solicitudes.filter(s => s.estado === EstadoSolicitud.COMPLETADA).length;
+}
+
   
   cargarSolicitudes(userId: number): void {
     this.solicitudService.getSolicitudesByArrendador(userId)
@@ -114,17 +130,22 @@ export class SolicitudesArrendadorComponent implements OnInit {
       this.rechazadas = 0;
       
       // Contar por estado
-      for(const solicitud of this.solicitudes) {
-        if(solicitud.estado === EstadoSolicitud.PENDIENTE) {
-          this.pendientes++;
-        } else if(solicitud.estado === EstadoSolicitud.COMPLETADA) {
-          this.completadas++;
-        } else if(solicitud.estado === EstadoSolicitud.RECHAZADA) {
-          this.rechazadas++;
-        } else if(solicitud.estado === EstadoSolicitud.APROBADA) {
-          this.aprobadas++;
+      this.solicitudes.forEach(solicitud => {
+        switch (solicitud.estado) {
+          case EstadoSolicitud.PENDIENTE:
+            this.pendientes++;
+            break;
+          case EstadoSolicitud.APROBADA:
+            this.aprobadas++;
+            break;
+          case EstadoSolicitud.RECHAZADA:
+            this.rechazadas++;
+            break;
+          case EstadoSolicitud.COMPLETADA:
+            this.completadas++;
+            break;
         }
-      }
+      });
     })
 
 
@@ -182,16 +203,16 @@ export class SolicitudesArrendadorComponent implements OnInit {
       let estadoFiltrado: EstadoSolicitud;
       
       switch(filters.status) {
-        case 'pending':
+        case EstadoSolicitud.PENDIENTE:
           estadoFiltrado = EstadoSolicitud.PENDIENTE;
           break;
-        case 'approved':
+        case EstadoSolicitud.APROBADA:
           estadoFiltrado = EstadoSolicitud.APROBADA;
           break;
-        case 'rejected':
+        case EstadoSolicitud.RECHAZADA:
           estadoFiltrado = EstadoSolicitud.RECHAZADA;
           break;
-        case 'completed':
+        case EstadoSolicitud.COMPLETADA:
           estadoFiltrado = EstadoSolicitud.COMPLETADA;
           break;
       }
@@ -223,6 +244,7 @@ export class SolicitudesArrendadorComponent implements OnInit {
   }
 
   buscarSolicitudes(): void {
+    this.activeTab = 'all'; // Cambiar a la pestaña "Todas" al buscar
     this.filterRequests(this.filters);
   }
 
@@ -236,6 +258,41 @@ export class SolicitudesArrendadorComponent implements OnInit {
     this.solicitudesFiltradas = [...this.solicitudes];
   }
 
+
+  abrirModalSegunEstado(requestId: number): void {
+    console.log('Abrir modal para solicitud con ID:', requestId);
+    
+    const solicitud = this.solicitudesFiltradas.find(s => s.id === requestId);
+    if(!solicitud) return;
+
+    this.selectedSolicitud = solicitud;
+    console.log(this.selectedSolicitud);
+    this.selectedGuest = solicitud.arrendadorNombre;
+    
+    switch (solicitud.estado) {
+      case EstadoSolicitud.PENDIENTE:
+        this.modalTipo = 'detalles';
+        this.showDetailsModal = true;
+        break;
+      case EstadoSolicitud.APROBADA:
+        this.modalTipo = 'calificacion';
+        this.showReviewModal = true;
+        break;
+      case EstadoSolicitud.COMPLETADA:
+        this.modalTipo = 'completada';
+        this.showCompletadaModal = true;
+        break;
+      // Puedes agregar más casos según necesites
+      default:
+        this.modalTipo = '';
+        break;
+    }
+  }
+
+  cerrarModal(): void {
+    this.showDetailsModal = false;
+    this.modalTipo = '';
+  }
 
 
 }

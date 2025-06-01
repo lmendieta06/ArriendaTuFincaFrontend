@@ -6,6 +6,7 @@ import { EstadoSolicitud } from '../../enums/estado_solicitud';
 import { SolicitudUpdateDTO } from '../../services/solicitud-services/solicitud.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Pago } from '../../models/pago.model';
+import e from 'express';
 
 @Component({
   selector: 'app-solicitud-card-arrendador',
@@ -30,9 +31,7 @@ export class SolicitudCardArrendadorComponent {
   solicitud: Solicitud | null = null;
 
    // Eventos
-   @Output() viewDetailsEvent = new EventEmitter<number>();
-   @Output() approveRequestEvent = new EventEmitter<number>();
-   @Output() rejectRequestEvent = new EventEmitter<number>();
+   @Output() verDetalleEvent = new EventEmitter<number>();
 
   constructor(private solicitudService: SolicitudService, private router:Router, private route: ActivatedRoute) {}
 
@@ -76,12 +75,6 @@ export class SolicitudCardArrendadorComponent {
     return '';
   }
 
-  // Event handlers
-  viewDetails(event: Event): void {
-    event.stopPropagation();
-    this.viewDetailsEvent.emit(this.requestId);
-  }
-
   updateEstadoSolicitud(estado : EstadoSolicitud): void {
     const data:SolicitudUpdateDTO = {
       estado:estado,
@@ -94,11 +87,7 @@ export class SolicitudCardArrendadorComponent {
       this.showActions = false;
       
       // Emitir evento para notificar al componente padre
-      if (estado === EstadoSolicitud.APROBADA) {
-        this.approveRequestEvent.emit(this.requestId);
-      } else if (estado === EstadoSolicitud.RECHAZADA) {
-        this.rejectRequestEvent.emit(this.requestId);
-      }
+      this.verDetalleEvent.emit(this.requestId);
     })
 
     .catch(error => {
@@ -142,15 +131,16 @@ export class SolicitudCardArrendadorComponent {
     return this.status !== EstadoSolicitud.RECHAZADA;
   }
 
-  onActionClick(): void {
+  onActionClick(event: Event): void {
     if (this.solicitud) {
       switch (this.status) {
         case EstadoSolicitud.APROBADA:
         case EstadoSolicitud.PENDIENTE:
-          this.router.navigate(['/home-arrendador/pago', this.solicitud.id]);
-
-
-          break;
+          {
+            event.stopPropagation();
+            this.verDetalleEvent.emit(this.requestId);
+            break;
+          }
         case EstadoSolicitud.COMPLETADA:
           this.router.navigate(['../calificacion', this.solicitud.id], { relativeTo: this.route });
           break;

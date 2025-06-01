@@ -57,12 +57,9 @@
         </div>
     
         <p class="finca-price">COP {{ selectedPropiedad?.precioPorDia | number:'1.0-0' }} por día</p>
-    
         <p class="finca-location">📍 {{ selectedPropiedad?.ubicacion }}</p>
         <p class="finca-capacidad">👥 {{ selectedPropiedad?.capacidad }} personas</p>
-    
         <p class="finca-descripcion">{{ selectedPropiedad?.descripcion }}</p>
-    
         <div class="fecha-row">
           <input type="date" [(ngModel)]="fechaInicio" placeholder="Fecha de inicio" />
           <input type="date" [(ngModel)]="fechaFin" placeholder="Fecha de fin" />

@@ -60,9 +60,9 @@
 
       <button *ngIf="status !== 'RECHAZADA'"
         [ngClass]="getButtonClass()"
-        (click)="onActionClick()">
-  {{ getActionButtonLabel() }}
-</button>
+        (click)="onActionClick($event)">
+        {{ getActionButtonLabel() }}
+      </button>
 
       
 

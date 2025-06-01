@@ -1,0 +1,87 @@
+<div class="modal-container" *ngIf="visible">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Detalles de la Solicitud</h2>
+      <span class="modal-close" (click)="closeDetailsModal()">&times;</span>
+    </div>
+
+    <!-- Cargando o error -->
+    <div class="loading-container" *ngIf="!dataLoaded">
+      <div class="spinner"></div>
+      <p>Cargando información...</p>
+    </div>
+
+    <div class="error-container" *ngIf="errorMessage">
+      <div class="error-icon">⚠️</div>
+      <p class="error-message">{{ errorMessage }}</p>
+    </div>
+
+    <!-- Contenido del modal -->
+    <div class="modal-body" *ngIf="dataLoaded && !errorMessage">
+      <div class="section">
+        <h3 class="section-title">Información de la Propiedad</h3>
+        <div class="property-info">
+          <div class="finca-image-placeholder">
+                <img *ngIf="selectedPropiedad?.imagen" [src]="selectedPropiedad.imagen" alt="Imagen propiedad" />
+          </div>
+          <div class="property-details">
+            <div class="finca-title">{{ selectedPropiedad?.nombre }}</div>
+            <div class="property-location">{{ selectedPropiedad?.ubicacion }}</div>
+            <div class="property-description">{{ selectedPropiedad?.descripcion }}</div>
+            <div class="property-stats">
+              <div class="stat">
+                <div class="stat-value">{{ selectedPropiedad?.capacidad }}</div>
+                <div class="stat-label">Capacidad</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value">{{ selectedPropiedad?.precioPorDia | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+                <div class="stat-label">Por/noche</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value">{{ selectedPropiedad?.calificacion }}</div>
+                <div class="stat-label">Calificación</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">Detalles de la Solicitud</h3>
+        <div class="reservation-details">
+          <div class="status-badge" [ngClass]="reservation.status">{{ reservation.status }}</div>
+          <div class="detail-row">
+            <span class="detail-label">ID de Solicitud</span>
+            <span class="detail-value">{{ reservation.id }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Fecha de Solicitud</span>
+            <span class="detail-value">{{ reservation.requestDate | date:'d MMMM, yyyy' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Fecha de Llegada</span>
+            <span class="detail-value">{{ reservation.checkInDate | date:'d MMMM, yyyy' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Fecha de Salida</span>
+            <span class="detail-value">{{ reservation.checkOutDate | date:'d MMMM, yyyy' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Duración</span>
+            <span class="detail-value">{{ reservation.duration }} días</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Monto Total</span>
+            <span class="detail-value">{{ reservation.totalAmount | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Estado de Pago</span>
+            <span class="detail-value">{{ reservation.paymentStatus }}</span>
+          </div>
+
+    <div class="modal-footer" *ngIf="dataLoaded && !errorMessage">
+      <button class="btn btn-cancel" (click)="close()">Cerrar</button>
+    </div>
+  </div>
+</div>
+

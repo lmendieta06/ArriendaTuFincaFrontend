@@ -65,28 +65,37 @@
         [checkOut]="solicitud.fechaFin"
         [totalAmount]="solicitud.montoTotal"
         [requestId]="solicitud.id"
-        [status]="solicitud.estado">
+        [status]="solicitud.estado"
+        (verDetalleEvent)="abrirModalSegunEstado($event)">
       </app-solicitud-card-arrendador>
     </div>
     
-    <!-- Modales -->
     <!-- Modal de Detalles de Solicitud -->
-    <!-- <app-solicitud-details 
-      *ngIf="showDetailsModal"
-      [visible]="showDetailsModal"
-      [solicitudData]="selectedSolicitud"
-      (closeEvent)="closeDetailsModal()"
-      (approved)="approveRequest($event)"
-      (rejected)="rejectRequest($event)">
-    </app-solicitud-details> -->
+    <app-solicitud-details-arrendador 
+      *ngIf="modalTipo === 'detalles'"
+      [visible]="true"
+      [solicitudId]="selectedSolicitud?.id"
+      (closeEvent)="cerrarModal()">
+    </app-solicitud-details-arrendador>
+
     
     <!-- Modal de Calificación -->
-    <!-- <app-solicitud-calificacion
-      *ngIf="showReviewModal"
-      [visible]="showReviewModal"
-      [solicitud]="selectedSolicitud"
-      [guest]="selectedGuest"
-      (close)="closeReviewModal()"
-      (reviewSubmitted)="submitReview($event)">
-    </app-solicitud-calificacion> -->
+    <!--
+<app-solicitud-calificacion
+  *ngIf="modalTipo === 'calificacion'"
+  [visible]="true"
+  [solicitud]="selectedSolicitud"
+  [guest]="selectedGuest"
+  (close)="showReviewModal = false"
+  (reviewSubmitted)="submitReview($event)">
+</app-solicitud-calificacion>
+
+<app-solicitud-completada
+  *ngIf="modalTipo === 'completada'"
+  [solicitud]="selectedSolicitud"
+  (close)="showCompletadaModal = false">
+</app-solicitud-completada>
+-->
+
+
 </div>

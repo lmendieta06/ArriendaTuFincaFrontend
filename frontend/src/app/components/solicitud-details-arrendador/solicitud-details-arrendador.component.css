@@ -1,0 +1,316 @@
+/* Modal Container */
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9998 !important;
+  }
+  
+  .modal {
+    background-color: white;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90%;
+    max-height: 90vh;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;  
+    z-index: 9999 !important;
+    overflow-y: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1060;
+    position: relative;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Modal Header */
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .modal-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #999;
+  }
+  
+  .close-button:hover {
+    color: #333;
+  }
+  
+  /* Modal Body */
+  .modal-body {
+    padding: 0;
+  }
+  
+  .section {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e6a756;
+    padding-bottom: 10px;
+  }
+  
+  /* Property Information */
+  .property-info {
+    display: flex;
+    margin-bottom: 15px;
+  }
+  
+  .property-image {
+    width: 80px;
+    height: 80px;
+    background-color: #e6a756;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .property-details {
+    flex: 1;
+  }
+  
+  .property-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  
+  .property-location {
+    font-size: 12px;
+    color: #e63956;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .property-location::before {
+    content: "•";
+    margin-right: 5px;
+    color: #e63956;
+  }
+  
+  .property-description {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  
+  .property-stats {
+    display: flex;
+    justify-content: space-between;
+    max-width: 300px;
+  }
+  
+  .stat {
+    text-align: center;
+  }
+  
+  .stat-value {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+    color: #999;
+  }
+  
+  /* Guest Information */
+  .guest-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .guest-avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #e6a756;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .guest-details {
+    flex: 1;
+  }
+  
+  .guest-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  
+  .guest-contact {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .guest-contact i {
+    width: 14px;
+    margin-right: 8px;
+    color: #999;
+  }
+  
+  /* Reservation Details */
+  .reservation-details {
+    background-color: #fdf9f3;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .status-badge.pendiente {
+    background-color: #fff7dc;
+    color: #e6a756;
+  }
+  
+  .status-badge.aprobada {
+    background-color: #e0f7f0;
+    color: #00c87f;
+  }
+  
+  .status-badge.rechazada {
+    background-color: #ffe8e8;
+    color: #ff5a5a;
+  }
+  
+  .status-badge.completada {
+    background-color: #e8f4ff;
+    color: #5a9eff;
+  }
+  
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  
+  .detail-label {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .detail-value {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  /* Comments Section */
+  .comments-section {
+    margin-top: 15px;
+  }
+  
+  .comments-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .comments-text {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.4;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+  }
+  
+  /* Modal Footer */
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 20px;
+    gap: 10px;
+  }
+  
+  .btn {
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-cancel {
+    background-color: #f0f0f0;
+    color: #666;
+  }
+  
+  .btn-cancel:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .btn-approve {
+    background-color: #8B4513;
+    color: white;
+  }
+  
+  .btn-approve:hover {
+    background-color: #7a3d11;
+  }
+  
+  .btn-reject {
+    background-color: white;
+    border: 1px solid #e63956;
+    color: #e63956;
+  }
+  
+  .btn-reject:hover {
+    background-color: #fff0f2;
+  }

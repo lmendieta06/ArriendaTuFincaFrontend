@@ -50,8 +50,7 @@ export class DashboardArrendadorComponent  implements OnInit {
       }
     });
 
-
-
+    
     this.propertyService.getPropiedadesDisponibles()
     .then(data => {
       this.propiedades = data;
