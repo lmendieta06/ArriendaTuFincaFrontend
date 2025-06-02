@@ -80,7 +80,7 @@
             [description]="propiedad.descripcion"
             [capacity]="propiedad.capacidad"
             [rating]="propiedad.calificacionPromedio || 0"
-            [reservations]="propiedad.solicitudes?.length || 0"
+            [reservations]="propiedad.solicitudes ? propiedad.solicitudes.length : 0"
             [status]="propiedad.disponible ? 'Disponible' : 'No Disponible'"
             [amenities]="propiedad.caracteristicas ? propiedad.caracteristicas.split(',') : []"
             [image]="propiedad.imagen || ''"
