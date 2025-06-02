@@ -5,6 +5,7 @@ metadata:
   namespace: default
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 spec:
   ingressClassName: public
   rules:
@@ -17,4 +18,4 @@ spec:
           service:
             name: frontend
             port:
-              number: 80
+              number: 8081
