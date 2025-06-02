@@ -2,7 +2,7 @@
   <div class="modal">
     <div class="modal-header">
       <h2>Detalles de la Solicitud</h2>
-      <span class="modal-close" (click)="closeDetailsModal()">&times;</span>
+      <span class="modal-close" (click)="close()">&times;</span>
     </div>
 
     <!-- Cargando o error -->
@@ -22,23 +22,23 @@
         <h3 class="section-title">Información de la Propiedad</h3>
         <div class="property-info">
           <div class="finca-image-placeholder">
-                <img *ngIf="selectedPropiedad?.imagen" [src]="selectedPropiedad.imagen" alt="Imagen propiedad" />
+                <img *ngIf="property.imagen" [src]="property.imagen" alt="Imagen propiedad" />
           </div>
           <div class="property-details">
-            <div class="finca-title">{{ selectedPropiedad?.nombre }}</div>
-            <div class="property-location">{{ selectedPropiedad?.ubicacion }}</div>
-            <div class="property-description">{{ selectedPropiedad?.descripcion }}</div>
+            <div class="property-name">{{ property.name }}</div>
+            <div class="property-location">{{ property.location }}</div>
+            <div class="property-description">{{ property.description }}</div>
             <div class="property-stats">
               <div class="stat">
-                <div class="stat-value">{{ selectedPropiedad?.capacidad }}</div>
+                <div class="stat-value">{{ property.capacity }}</div>
                 <div class="stat-label">Capacidad</div>
               </div>
               <div class="stat">
-                <div class="stat-value">{{ selectedPropiedad?.precioPorDia | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+                <div class="stat-value">{{ property.price | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
                 <div class="stat-label">Por/noche</div>
               </div>
               <div class="stat">
-                <div class="stat-value">{{ selectedPropiedad?.calificacion }}</div>
+                <div class="stat-value">{{ property.rating }}</div>
                 <div class="stat-label">Calificación</div>
               </div>
             </div>
@@ -75,7 +75,7 @@
             <span class="detail-value">{{ reservation.totalAmount | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
           </div>
           <div class="detail-row">
-            <span class="detail-label">Estado de Pago</span>
+            <span class="detail-label">Estado</span>
             <span class="detail-value">{{ reservation.paymentStatus }}</span>
           </div>
 

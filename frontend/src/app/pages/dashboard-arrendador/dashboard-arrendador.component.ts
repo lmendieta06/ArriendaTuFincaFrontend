@@ -5,6 +5,8 @@ import { PropertyService, PropiedadSimple } from '../../services/property-servic
 import { Router } from '@angular/router';
 import { FincaCardComponent } from '../../components/finca-card/finca-card.component';
 import { LoginService } from '../../services/login_services/login.service';
+import { SolicitudCreateDTO, SolicitudService } from '../../services/solicitud-services/solicitud.service';
+import { EstadoSolicitud } from '../../enums/estado_solicitud';
 
 @Component({
   selector: 'app-dashboard-arrendador',
@@ -19,6 +21,7 @@ import { LoginService } from '../../services/login_services/login.service';
 })
 
 export class DashboardArrendadorComponent  implements OnInit {
+  userId: number = 0;
   userName: string = '';
   propiedades: PropiedadSimple[] = [];
   showDetailsModal: boolean = false;
@@ -28,6 +31,9 @@ export class DashboardArrendadorComponent  implements OnInit {
   fechaInicio: string = '';
   fechaFin: string = '';
   solicitudEnviada: boolean = false;
+  solicitudesEnviadas: Set<number> = new Set();
+  loading = true;
+  error: string | null = null;
   
   filtros = {
     nombre: '',
@@ -36,7 +42,7 @@ export class DashboardArrendadorComponent  implements OnInit {
   };
 
   ciudades: string[] = ['','Bogotá', 'Medellín', 'Cali'];
-  constructor(private loginService: LoginService, private propertyService: PropertyService, private router: Router) { }
+  constructor(private loginService: LoginService, private solicitudService: SolicitudService, private propertyService: PropertyService, private router: Router) { }
 
   
   ngOnInit(): void {
@@ -45,21 +51,47 @@ export class DashboardArrendadorComponent  implements OnInit {
     this.loginService.currentUser.subscribe(user => {
       if (user) {
         this.userName = user.nombre;
+        this.userId = user.id;
       } else {
         this.userName = '';
+        this.userId = -1;
       }
     });
 
-    
-    this.propertyService.getPropiedadesDisponibles()
-    .then(data => {
-      this.propiedades = data;
-      this.propiedadesOriginal = [...data]; // copia para filtros
-    })
-    .catch(err => {
-      console.error('Error al cargar propiedades:', err);
-    });
+    this.cargarPropiedadesFIltradas();
   }
+
+
+  async cargarPropiedadesFIltradas():Promise <void>{
+    this.loading = true;
+    this.error = null;
+
+    try {
+      const [propiedades, solicitudes] = await Promise.all([
+        this.propertyService.getPropiedadesDisponibles(),
+        this.solicitudService.getSolicitudesByArrendador(this.userId)
+      ]);
+
+      // Extraer los IDs de las propiedades que ya tienen una solicitud válida
+      const propiedadesConSolicitud = new Set(
+        solicitudes
+          .filter(s => s.estado == EstadoSolicitud.PENDIENTE) // opcional: incluir solo pendientes/aprobadas/completadas
+          .map(s => s.propiedadNombre)
+      );
+
+      // Filtrar las propiedades del arrendador
+      this.propiedades = propiedades.filter(
+        p => !propiedadesConSolicitud.has(p.nombre)
+      );
+
+    } catch (err) {
+      console.error('Error al cargar propiedades o solicitudes:', err);
+      this.error = 'Error al cargar las propiedades. Intente de nuevo.';
+    }
+
+    this.loading = false;
+  }
+  
 
   filtrarPropiedades() {
     this.propiedades = this.propiedadesOriginal.filter(propiedad => {
@@ -86,26 +118,72 @@ export class DashboardArrendadorComponent  implements OnInit {
   
 
   viewDetails(requestId: number): void {
+    if (this.solicitudesEnviadas.has(requestId)) {
+      alert('Ya has enviado una solicitud para esta propiedad.');
+      return; // No hace falta ni mostrar el modal
+    }
+  
     this.selectedPropiedad = this.propiedades.find(p => p.id === requestId);
     if (this.selectedPropiedad) {
       this.showDetailsModal = true;
     }
   }
   
+  
   closeDetailsModal(): void {
     this.showDetailsModal = false;
     this.selectedPropiedad = null;
   }
 
-  solicitarArriendo() {
-    // Lógica real de solicitud
-    this.solicitudEnviada = true;
+  solicitarArriendo(): void {
+    if (this.fechaInicio && this.fechaFin && this.selectedPropiedad) {
+      this.solicitudService.verificarDisponibilidadFechas(this.selectedPropiedad.id, this.fechaInicio, this.fechaFin)
+        .then(disponible => {
+          if (disponible) {
+            const solicitud: SolicitudCreateDTO = {
+              propiedadId: this.selectedPropiedad.id,
+              fechaInicio: this.fechaInicio,
+              fechaFin: this.fechaFin,
+              comentarios: 'Solicitud de arriendo'
+            };
+  
+            this.solicitudService.createSolicitud(this.userId, solicitud)
+              .then(response => {
+                console.log('Solicitud enviada con éxito', response);
+  
+                // Marca como enviada
+                this.solicitudesEnviadas.add(this.selectedPropiedad.id);
+  
+                // Opcional: eliminarla de la lista visible
+                this.propiedades = this.propiedades.filter(p => p.id !== this.selectedPropiedad.id);
+  
+                // Cierra el modal y resetea estado
+                this.closeDetailsModal();
+  
+                // Resetear fechas y flag de éxito (opcional si querés volver a usar el modal)
+                this.fechaInicio = '';
+                this.fechaFin = '';
+                this.solicitudEnviada = false;
+  
+                // También podrías mostrar un toast o algo más si querés
+              })
+              .catch(error => {
+                console.error('Error al enviar solicitud:', error);
+                alert('Hubo un error al enviar la solicitud. Intenta nuevamente.');
+              });
+          } else {
+            alert('Las fechas seleccionadas no están disponibles.');
+          }
+        })
+        .catch(error => {
+          console.error('Error al verificar disponibilidad de fechas:', error);
+          alert('Error al verificar disponibilidad de fechas.');
+        });
+    } else {
+      alert('Por favor, completa las fechas de inicio y fin');
+    }
   }
-
-  pagar() {
-    // Redirige o procesa el pago
-    alert('Redirigiendo a la pasarela de pago...');
-  }
-
+  
+  
   
 }

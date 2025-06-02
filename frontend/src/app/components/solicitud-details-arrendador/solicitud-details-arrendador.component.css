@@ -81,6 +81,12 @@
     padding-bottom: 10px;
   }
   
+  .finca-card-image img {
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+  }
+  
   /* Property Information */
   .property-info {
     display: flex;

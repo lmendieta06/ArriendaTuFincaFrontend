@@ -29,20 +29,33 @@
   </form>
   
 
+  <div *ngIf="loading">Cargando propiedades...</div>
+  <div *ngIf="error">{{ error }}</div>
+
+  <div *ngIf="!loading && propiedades.length === 0">
+    No tienes propiedades disponibles para nuevas solicitudes.
+  </div>
+
+  <div *ngIf="!loading && propiedades.length > 0">
+      <!-- En el card de la propiedad -->
+        <app-finca-card
+          *ngFor="let propiedad of propiedades"
+          [fincaName]="propiedad.nombre"
+          [description]="propiedad.descripcion"
+          [precioPorDia]="propiedad.precioPorDia"
+          [status]="propiedad.disponible"
+          [ubicacion]="propiedad.ubicacion"
+          [capacidad]="propiedad.capacidad"
+          [image]="propiedad.imagen"
+          [requestId]="propiedad.id"
+          (viewDetailsEvent)="viewDetails($event)">
+        </app-finca-card>
+  </div>
+  
+
   <div class="finca-list">
     <!-- Componente de tarjeta de finca -->
-    <app-finca-card
-      *ngFor="let propiedad of propiedades"
-      [fincaName]="propiedad.nombre"
-      [description]="propiedad.descripcion"
-      [precioPorDia]="propiedad.precioPorDia"
-      [status]="propiedad.disponible"
-      [ubicacion]="propiedad.ubicacion"
-      [capacidad]="propiedad.capacidad"
-      [image]="propiedad.imagen"
-      [requestId]="propiedad.id"
-      (viewDetailsEvent)="viewDetails($event)">
-    </app-finca-card>
+     
   </div>
 
     <!-- Modal para mostrar detalles de la propiedad -->
@@ -68,10 +81,9 @@
         <button class="finca-btn" (click)="solicitarArriendo()">Solicitar arriendo</button>
     
         <p *ngIf="solicitudEnviada" class="finca-solicitud-msg">
-          Solicitud enviada con éxito. Paga para finalizar el proceso
+          Solicitud enviada con éxito. Esperando a que te acepten la solicitud
         </p>
-    
-        <button *ngIf="solicitudEnviada" class="finca-btn pagar-btn" (click)="pagar()">Pagar ahora</button>
+        
       </div>
     </div>
     

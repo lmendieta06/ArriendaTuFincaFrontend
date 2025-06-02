@@ -47,16 +47,6 @@
       <div class="request-id">
         Solicitud {{ requestId }}
       </div>
-      
-      <div class="action-buttons" *ngIf="showActions">
-        <button class="approve-btn" (click)="updateEstadoSolicitud(EstadoSolicitud.APROBADA)">Aprobar</button>
-        <button class="reject-btn" (click)="updateEstadoSolicitud(EstadoSolicitud.RECHAZADA)">Rechazar</button>
-      </div>
-
-      <div class="rejected-message" *ngIf="status === 'RECHAZADA'">
-        Solicitud rechazada
-      </div>
-      
 
       <button *ngIf="status !== 'RECHAZADA'"
         [ngClass]="getButtonClass()"

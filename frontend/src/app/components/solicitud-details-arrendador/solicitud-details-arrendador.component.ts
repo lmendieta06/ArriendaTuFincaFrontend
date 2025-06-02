@@ -34,7 +34,6 @@ export class SolicitudDetailsArrendadorComponent implements OnInit, OnChanges{
     dataLoaded = false;
     errorMessage: string | null = null;
     showDetailsModal: boolean = false;
-    selectedPropiedad: any = null;
 
     constructor(private solicitudService: SolicitudService) { }
 
@@ -255,11 +254,6 @@ export class SolicitudDetailsArrendadorComponent implements OnInit, OnChanges{
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       return diffDays;
     }
-
-    closeDetailsModal(): void {
-    this.showDetailsModal = false;
-    this.selectedPropiedad = null;
-  }
 
   close(): void {
     this.visible = false;
