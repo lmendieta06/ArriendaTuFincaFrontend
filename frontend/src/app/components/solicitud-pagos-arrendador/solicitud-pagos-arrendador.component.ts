@@ -5,40 +5,47 @@ import { Solicitud } from '../../models/solicitud.model';
 import { Propiedad } from '../../models/propiedad.model';
 import { Pago } from '../../models/pago.model';
 import { SolicitudService } from '../../services/solicitud-services/solicitud.service';
-  
+import { FormsModule } from '@angular/forms';
+import { PaymentCreateDTO, PaymentService } from '../../services/payments-services/payments.service';
 
 @Component({
-  selector: 'app-solicitud-details-arrendador',
+  selector: 'app-solicitud-pagos-arrendador',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './solicitud-details-arrendador.component.html',
-  styleUrl: './solicitud-details-arrendador.component.css',
+  imports: [CommonModule, FormsModule],
+  templateUrl: './solicitud-pagos-arrendador.component.html',
+  styleUrl: './solicitud-pagos-arrendador.component.css'
 })
-export class SolicitudDetailsArrendadorComponent implements OnInit, OnChanges{
-
+export class SolicitudPagosArrendadorComponent implements OnInit, OnChanges {
     @Input() visible = false;
     @Input() solicitudId: number = 0;
     
     @Output() closeEvent = new EventEmitter<void>();
+    @Output() pagoRealizado = new EventEmitter<PaymentCreateDTO>();
 
     solicitud!: Solicitud;
     propiedad!: Propiedad;
     arrendador!: Usuario;
-    arrendatario!: Usuario;
     pago?: Pago;
+    bancoSeleccionado: string = '';
+    valorIngresado: number = 0;
+    usuarioId!: number; // Se llenará desde la solicitud
+    pagoEnProceso: boolean = false;
+    mensajePago: string | null = null;
+    referenciaPago: string ='';
+
+
   
     property: any = {};
-    guest: any = {};
     reservation: any = {};
     
     dataLoaded = false;
     errorMessage: string | null = null;
     showDetailsModal: boolean = false;
 
-    constructor(private solicitudService: SolicitudService) { }
+    constructor(private solicitudService: SolicitudService, private paymentService: PaymentService) { }
 
     ngOnInit(): void {
-      console.log('Modal de detalles iniciado con ID:', this.solicitudId);
+      console.log('Modal de pago iniciado con ID:', this.solicitudId);
       if (this.solicitudId > 0) {
         this.loadSolicitudData();
       } else if (this.solicitud) {
@@ -79,9 +86,6 @@ export class SolicitudDetailsArrendadorComponent implements OnInit, OnChanges{
           if (data.arrendador) {
             this.arrendador = data.arrendador;
           }
-          if (data.arrendatario) {
-            this.arrendatario = data.arrendatario;
-          }
           if (data.pago) {
             this.pago = data.pago;
           }
@@ -95,7 +99,7 @@ export class SolicitudDetailsArrendadorComponent implements OnInit, OnChanges{
           this.dataLoaded = true; // Para mostrar el mensaje de error
         });
     }
-    
+  
     private actualizarDatosVista(): void {
       if (!this.solicitud) {
         this.errorMessage = 'No hay datos de solicitud disponibles';
@@ -103,7 +107,7 @@ export class SolicitudDetailsArrendadorComponent implements OnInit, OnChanges{
       }
       
       // Si no hay propiedad o usuario, intentar cargar completamente desde el servicio
-      if (!this.propiedad || !this.arrendador || !this.arrendatario) {
+      if (!this.propiedad || !this.arrendador) {
         if (this.solicitudId > 0) {
           this.loadSolicitudData();
           return;
@@ -117,20 +121,10 @@ export class SolicitudDetailsArrendadorComponent implements OnInit, OnChanges{
       this.property = {
         code: this.getPropertyCode(this.propiedad),
         name: this.propiedad.nombre,
-        location: this.getPropertyLocation(this.propiedad),
-        description: this.propiedad.descripcion,
-        capacity: this.propiedad.capacidad || 'N/A',
-        price: this.propiedad.precioPorDia,
-        rating: this.getPropertyRating(this.propiedad)
+        price: this.propiedad.precioPorDia
       };
   
-      // Datos del huésped (arrendador)
-      this.guest = {
-        name: this.arrendador.nombre,
-        email: this.arrendador.email,
-        phone: this.arrendador.telefono || '',
-        memberSince: this.getMemberSince(this.arrendador)
-      };
+      
   
       // Datos del pago
       let paymentStatus = 'Pendiente';
@@ -144,27 +138,8 @@ export class SolicitudDetailsArrendadorComponent implements OnInit, OnChanges{
         paymentReference = this.pago.referenciaPago;
         paymentDate = this.pago.fechaPago;
       }
-  
-      // Datos de la reserva
-      this.reservation = {
-        id: `SOL_${this.solicitud.id.toString().padStart(3, '0')}`,
-        status: this.solicitud.estado,
-        requestDate: new Date(), // Fecha actual por defecto
-        checkInDate: this.solicitud.fechaInicio,
-        checkOutDate: this.solicitud.fechaFin,
-        duration: this.calculateDuration(this.solicitud.fechaInicio, this.solicitud.fechaFin),
-        totalAmount: this.solicitud.montoTotal,
-        paymentStatus: paymentStatus,
-        paymentMethod: paymentMethod,
-        paymentReference: paymentReference,
-        paymentDate: paymentDate,
-        comments: this.solicitud.comentarios
-      };
     }
-  
-    /**
-     * Obtiene el código de la propiedad (F1, F2, etc.)
-     */
+    
     private getPropertyCode(propiedad: Propiedad): string {
       if (!propiedad || !propiedad.nombre) return 'P0';
       
@@ -174,57 +149,8 @@ export class SolicitudDetailsArrendadorComponent implements OnInit, OnChanges{
       return `${tipoPropiedad}${propiedad.id}`;
     }
   
-    /**
-     * Obtiene la ubicación completa de la propiedad
-     */
-    private getPropertyLocation(propiedad: Propiedad): string {
-      if (!propiedad) return 'Ubicación no disponible';
-      
-      if (propiedad.ciudad && propiedad.departamento) {
-        return `${propiedad.ciudad}, ${propiedad.departamento}`;
-      } else if (propiedad.ubicacion) {
-        return propiedad.ubicacion;
-      } else {
-        return 'Ubicación no disponible';
-      }
-    }
-  
-    /**
-     * Calcula la calificación promedio de la propiedad
-     */
-    private getPropertyRating(propiedad: Propiedad): number {
-      if (!propiedad || !propiedad.calificaciones || propiedad.calificaciones.length === 0) {
-        return 0;
-      }
-      
-      const calificacionesActivas = propiedad.calificaciones.filter(c => c.activo);
-      if (calificacionesActivas.length === 0) return 0;
-      
-      const sum = calificacionesActivas.reduce((acc, curr) => acc + curr.puntuacion, 0);
-      return Number((sum / calificacionesActivas.length).toFixed(1));
-    }
-  
-    /**
-     * Obtiene la fecha desde la que el usuario es miembro
-     * En un caso real, esta información vendría del usuario
-     */
-    private getMemberSince(usuario: Usuario): Date {
-      // Simulamos una fecha para el ejemplo
-      return new Date(2023, 9, 1); // Octubre 2023
-    }
-  
-    /**
-     * Calcula la duración en días entre fechas
-     */
-    private calculateDuration(fechaInicio: Date, fechaFin: Date): number {
-      if (!fechaInicio || !fechaFin) return 0;
-      
-      const start = new Date(fechaInicio);
-      const end = new Date(fechaFin);
-      const diffTime = Math.abs(end.getTime() - start.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      return diffDays;
-    }
+
+
 
   close(): void {
     this.visible = false;
@@ -243,5 +169,37 @@ export class SolicitudDetailsArrendadorComponent implements OnInit, OnChanges{
         .join('')
         .substring(0, 2)
         .toUpperCase();
+    }
+
+  
+    procesarPago() {
+
+      if (!this.valorIngresado || this.valorIngresado < this.property.price) {
+        this.mensajePago = 'El monto ingresado es insuficiente.';
+        return;
+      }
+
+      
+      if (!this.bancoSeleccionado || this.valorIngresado < this.property.price) {
+        this.errorMessage = 'Debes seleccionar un método de pago y un valor válido.';
+        return;
+      }
+  
+      const pago: PaymentCreateDTO = {
+        solicitudId: this.solicitudId,
+        monto: this.valorIngresado,
+        metodoPago: this.bancoSeleccionado.toUpperCase(), // Asumiendo que el enum en el back usa mayúsculas
+        referenciaPago: 'REF-' + Date.now() // Puedes mejorarlo con un campo real si quieres
+      };
+  
+      this.paymentService.createPago(pago).then(()=>{
+        this.pagoRealizado.emit(pago);
+        this.close();
+      })
+      .catch(error => {
+        console.error('Error al hacer el pago:', error);
+        this.mensajePago = 'Ocurrió un error al procesar el pago. Intenta nuevamente.';
+      });
+      
     }
 }

@@ -45,14 +45,16 @@ export class PaymentService {
   }
 
   // Crear nuevo pago
-  createPago(usuarioId: number, pago: PaymentCreateDTO): Promise<Pago> {
-    return axios.post<Pago>(`${environment.apiUrl}/pagos/registrar/${usuarioId}`, pago)
+  createPago(pago: PaymentCreateDTO): Promise<Pago> {
+    return axios.post<Pago>(`${environment.apiUrl}/pagos/registrar`, pago)
       .then(res => res.data)
       .catch(err => {
         console.error('Error al crear pago:', err);
         throw err;
       });
   }
+  
+  
 
   // Actualizar pago
   updatePago(id: number, pago: PaymentUpdateDTO): Promise<Pago> {

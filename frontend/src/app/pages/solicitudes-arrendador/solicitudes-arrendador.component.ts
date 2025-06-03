@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SolicitudCardArrendadorComponent } from '../../components/solicitud-card-arrendador/solicitud-card-arrendador.component';
 import { SolicitudDetailsArrendadorComponent } from '../../components/solicitud-details-arrendador/solicitud-details-arrendador.component';
+import { SolicitudPagosArrendadorComponent } from '../../components/solicitud-pagos-arrendador/solicitud-pagos-arrendador.component';
 import { SolicitudCalificacionComponent } from '../../components/solicitud-calificacion/solicitud-calificacion.component';
 import { Solicitud } from '../../models/solicitud.model';
-import { SolicitudService, SolicitudSimple } from '../../services/solicitud-services/solicitud.service';
+import { SolicitudService, SolicitudSimple, SolicitudUpdateDTO } from '../../services/solicitud-services/solicitud.service';
 import { LoginService } from '../../services/login_services/login.service';
 import { EstadoSolicitud } from '../../enums/estado_solicitud';
+import { PaymentCreateDTO } from '../../services/payments-services/payments.service';
 
 interface FilterOptions {
   property: string;
@@ -24,6 +26,7 @@ interface FilterOptions {
     FormsModule,
     SolicitudCardArrendadorComponent,
     SolicitudDetailsArrendadorComponent,
+    SolicitudPagosArrendadorComponent,
     SolicitudCalificacionComponent
   ],
   templateUrl: './solicitudes-arrendador.component.html',
@@ -41,11 +44,14 @@ export class SolicitudesArrendadorComponent implements OnInit {
   aprobadas: number = 0;
   rechazadas: number = 0;
   modalTipo: string = ''; // puede ser 'detalles', 'calificacion', etc.
+  EstadoSolicitud = EstadoSolicitud;
+
+
 
   // Propiedades para el HTML
   activeTab: string = 'all';
   showDetailsModal: boolean = false;
-  showReviewModal: boolean = false;
+  showPaymentModal: boolean = false;
   selectedSolicitud: any = null;
   selectedGuest: any = null;
   showCompletadaModal: boolean = false;
@@ -275,21 +281,50 @@ export class SolicitudesArrendadorComponent implements OnInit {
         this.showDetailsModal = true;
         break;
       case EstadoSolicitud.APROBADA:
-        this.modalTipo = 'calificacion';
-        this.showReviewModal = true;
+        this.modalTipo = 'pago';
+        this.showPaymentModal = true;
         break;
       case EstadoSolicitud.COMPLETADA:
         this.modalTipo = 'completada';
         this.showCompletadaModal = true;
         break;
-      // Puedes agregar más casos según necesites
+        
       default:
         this.modalTipo = '';
         break;
     }
   }
 
+
+
+  onPagoRealizado(pago: PaymentCreateDTO): void {
+    console.log('Pago recibido en el padre:', pago);
+    this.updateEstadoSolicitud(pago.solicitudId,EstadoSolicitud.COMPLETADA);
+  }
+
+
+  updateEstadoSolicitud(solicitudId: number, estado: EstadoSolicitud): void {
+    const solicitud = this.solicitudesFiltradas.find(s => s.id === solicitudId);
+    if (!solicitud) return;
+  
+    const data: SolicitudUpdateDTO = {
+      estado: estado,
+      comentarios: `Estado solicitud ha cambiado a ${estado}`
+    };
+  
+    this.solicitudService.updateEstadoSolicitud(solicitudId, data)
+      .then(() => {
+        solicitud.estado = estado;
+      })
+      .catch(error => {
+        console.error(`Error al actualizar estado a ${estado}:`, error);
+      });
+  }
+  
+
+  
   cerrarModal(): void {
+    this.showPaymentModal = false;
     this.showDetailsModal = false;
     this.modalTipo = '';
   }

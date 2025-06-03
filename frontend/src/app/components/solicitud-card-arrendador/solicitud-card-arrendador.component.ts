@@ -31,7 +31,8 @@ export class SolicitudCardArrendadorComponent {
   solicitud: Solicitud | null = null;
 
    // Eventos
-   @Output() verDetalleEvent = new EventEmitter<number>();
+   @Output() verSolicitudEvent = new EventEmitter<number>();
+  @Output() hacerpagoEvent = new EventEmitter<number>();  
 
   constructor(private solicitudService: SolicitudService, private router:Router, private route: ActivatedRoute) {}
 
@@ -87,7 +88,7 @@ export class SolicitudCardArrendadorComponent {
       this.showActions = false;
       
       // Emitir evento para notificar al componente padre
-      this.verDetalleEvent.emit(this.requestId);
+      this.verSolicitudEvent.emit(this.requestId);
     })
 
     .catch(error => {
@@ -132,19 +133,8 @@ export class SolicitudCardArrendadorComponent {
   }
 
   onActionClick(event: Event): void {
-    if (this.solicitud) {
-      switch (this.status) {
-        case EstadoSolicitud.APROBADA:
-        case EstadoSolicitud.PENDIENTE:
-          {
-            event.stopPropagation();
-            this.verDetalleEvent.emit(this.requestId);
-            break;
-          }
-        case EstadoSolicitud.COMPLETADA:
-          this.router.navigate(['../calificacion', this.solicitud.id], { relativeTo: this.route });
-          break;
-      }
-    }
+    event.stopPropagation();
+    this.verSolicitudEvent.emit(this.requestId);
   }
+  
 }

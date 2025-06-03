@@ -66,7 +66,7 @@
         [totalAmount]="solicitud.montoTotal"
         [requestId]="solicitud.id"
         [status]="solicitud.estado"
-        (verDetalleEvent)="abrirModalSegunEstado($event)">
+        (verSolicitudEvent)="abrirModalSegunEstado($event)">
       </app-solicitud-card-arrendador>
     </div>
     
@@ -79,17 +79,16 @@
     </app-solicitud-details-arrendador>
 
     
-    <!-- Modal de Calificación -->
-    <!--
-<app-solicitud-calificacion
-  *ngIf="modalTipo === 'calificacion'"
-  [visible]="true"
-  [solicitud]="selectedSolicitud"
-  [guest]="selectedGuest"
-  (close)="showReviewModal = false"
-  (reviewSubmitted)="submitReview($event)">
-</app-solicitud-calificacion>
+    <!-- Modal de Pago -->
+    <app-solicitud-pagos-arrendador
+      *ngIf="modalTipo === 'pago'"
+      [visible]="true"
+      [solicitudId]="selectedSolicitud?.id"
+      (closeEvent)="cerrarModal()"
+      (pagoRealizado)="onPagoRealizado($event)">
+    </app-solicitud-pagos-arrendador>
 
+    <!--
 <app-solicitud-completada
   *ngIf="modalTipo === 'completada'"
   [solicitud]="selectedSolicitud"
