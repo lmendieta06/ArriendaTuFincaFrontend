@@ -116,15 +116,17 @@ export class SolicitudPagosArrendadorComponent implements OnInit, OnChanges {
           return;
         }
       }
-  
-      // Datos de la propiedad
+
+      // Datos de la propiedad y pago total
+      const diasReserva = this.getDiasDeReserva(this.solicitud.fechaInicio, this.solicitud.fechaFin);
+      const precioTotal = this.propiedad.precioPorDia * diasReserva;
+
       this.property = {
         code: this.getPropertyCode(this.propiedad),
         name: this.propiedad.nombre,
-        price: this.propiedad.precioPorDia
+        price: precioTotal
       };
-  
-      
+
   
       // Datos del pago
       let paymentStatus = 'Pendiente';
@@ -148,7 +150,20 @@ export class SolicitudPagosArrendadorComponent implements OnInit, OnChanges {
                             propiedad.nombre.startsWith('Hacienda') ? 'H' : 'P';
       return `${tipoPropiedad}${propiedad.id}`;
     }
-  
+
+
+    private getDiasDeReserva(inicio: Date | string, fin: Date | string): number {
+      const fechaInicio = new Date(inicio);
+      const fechaFin = new Date(fin);
+
+      const msPorDia = 1000 * 60 * 60 * 24;
+      const diffMs = fechaFin.getTime() - fechaInicio.getTime();
+
+      let dias = Math.ceil(diffMs / msPorDia);
+      if (dias <= 0) dias = 1; // Asegura mínimo un día
+
+      return dias;
+    }
 
 
 

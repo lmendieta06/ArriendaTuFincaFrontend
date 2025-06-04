@@ -34,6 +34,8 @@ export class DashboardArrendadorComponent  implements OnInit {
   solicitudesEnviadas: Set<number> = new Set();
   loading = true;
   error: string | null = null;
+  capacidadSolicitada: number | null = null;
+
   
   filtros = {
     nombre: '',
@@ -72,10 +74,17 @@ export class DashboardArrendadorComponent  implements OnInit {
         this.solicitudService.getSolicitudesByArrendador(this.userId)
       ]);
 
-      // Extraer los IDs de las propiedades que ya tienen una solicitud válida
+      // Definir estados válidos para excluir propiedades con solicitudes en estos estados
+      const estadosFiltrar = new Set([
+        EstadoSolicitud.PENDIENTE,
+        EstadoSolicitud.APROBADA,
+        EstadoSolicitud.COMPLETADA
+      ]);
+
+      // Extraer nombres de propiedades con solicitudes en los estados definidos
       const propiedadesConSolicitud = new Set(
         solicitudes
-          .filter(s => s.estado == EstadoSolicitud.PENDIENTE) // opcional: incluir solo pendientes/aprobadas/completadas
+          .filter(s => estadosFiltrar.has(s.estado))
           .map(s => s.propiedadNombre)
       );
 
@@ -89,7 +98,7 @@ export class DashboardArrendadorComponent  implements OnInit {
       this.error = 'Error al cargar las propiedades. Intente de nuevo.';
     }
 
-    this.loading = false;
+      this.loading = false;
   }
   
 
@@ -133,57 +142,50 @@ export class DashboardArrendadorComponent  implements OnInit {
   closeDetailsModal(): void {
     this.showDetailsModal = false;
     this.selectedPropiedad = null;
+    this.capacidadSolicitada = null;
   }
 
+
   solicitarArriendo(): void {
-    if (this.fechaInicio && this.fechaFin && this.selectedPropiedad) {
-      this.solicitudService.verificarDisponibilidadFechas(this.selectedPropiedad.id, this.fechaInicio, this.fechaFin)
-        .then(disponible => {
-          if (disponible) {
-            const solicitud: SolicitudCreateDTO = {
-              propiedadId: this.selectedPropiedad.id,
-              fechaInicio: this.fechaInicio,
-              fechaFin: this.fechaFin,
-              comentarios: 'Solicitud de arriendo'
-            };
-  
-            this.solicitudService.createSolicitud(this.userId, solicitud)
-              .then(response => {
-                console.log('Solicitud enviada con éxito', response);
-  
-                // Marca como enviada
-                this.solicitudesEnviadas.add(this.selectedPropiedad.id);
-  
-                // Opcional: eliminarla de la lista visible
-                this.propiedades = this.propiedades.filter(p => p.id !== this.selectedPropiedad.id);
-  
-                // Cierra el modal y resetea estado
-                this.closeDetailsModal();
-  
-                // Resetear fechas y flag de éxito (opcional si querés volver a usar el modal)
-                this.fechaInicio = '';
-                this.fechaFin = '';
-                this.solicitudEnviada = false;
-  
-                // También podrías mostrar un toast o algo más si querés
-              })
-              .catch(error => {
-                console.error('Error al enviar solicitud:', error);
-                alert('Hubo un error al enviar la solicitud. Intenta nuevamente.');
-              });
-          } else {
-            alert('Las fechas seleccionadas no están disponibles.');
-          }
-        })
-        .catch(error => {
-          console.error('Error al verificar disponibilidad de fechas:', error);
-          alert('Error al verificar disponibilidad de fechas.');
-        });
-    } else {
-      alert('Por favor, completa las fechas de inicio y fin');
-    }
+  if (!this.fechaInicio || !this.fechaFin || !this.capacidadSolicitada || this.capacidadSolicitada <= 0) {
+    alert('Por favor, completa las fechas y la cantidad de personas que se hospedarán.');
+    return;
   }
-  
-  
-  
+
+  if (this.selectedPropiedad) {
+    this.solicitudService.verificarDisponibilidadFechas(this.selectedPropiedad.id, this.fechaInicio, this.fechaFin)
+      .then(disponible => {
+        if (disponible) {
+          const solicitud: SolicitudCreateDTO = {
+            propiedadId: this.selectedPropiedad.id,
+            fechaInicio: this.fechaInicio,
+            fechaFin: this.fechaFin,
+            comentarios: `Solicitud para ${this.capacidadSolicitada} personas`
+          };
+
+          this.solicitudService.createSolicitud(this.userId, solicitud)
+            .then(response => {
+              console.log('Solicitud enviada con éxito', response);
+              this.solicitudesEnviadas.add(this.selectedPropiedad.id);
+              this.propiedades = this.propiedades.filter(p => p.id !== this.selectedPropiedad.id);
+              this.closeDetailsModal();
+              this.fechaInicio = '';
+              this.fechaFin = '';
+              this.capacidadSolicitada = null;
+              this.solicitudEnviada = false;
+            })
+            .catch(error => {
+              console.error('Error al enviar solicitud:', error);
+              alert('Hubo un error al enviar la solicitud. Intenta nuevamente.');
+            });
+        } else {
+          alert('Las fechas seleccionadas no están disponibles.');
+        }
+      })
+      .catch(error => {
+        console.error('Error al verificar disponibilidad de fechas:', error);
+        alert('Error al verificar disponibilidad de fechas.');
+      });
+    }
+  } 
 }

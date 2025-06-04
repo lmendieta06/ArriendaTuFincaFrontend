@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs';
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse }from 'axios';
 import { TipoUsuario } from '../../enums/tipo_usuario';
 import { environment } from '../../../environments/environment';
 import { TokenResponse } from '../../models/token_response';
-
 export interface LoginDTO {
   email: string;
   password: string;
@@ -21,31 +20,30 @@ export interface UsuarioResponse {
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+
+export class LoginService{
+
   private apiUrl = `${environment.apiUrl}/auth`;
   private axios: AxiosInstance;
   private currentUserSubject: BehaviorSubject<UsuarioResponse | null>;
   public currentUser: Observable<UsuarioResponse | null>;
-  
-  // Almacenamiento en memoria para el token y usuario
-  private token: string | null = null;
-  private user: UsuarioResponse | null = null;
 
   constructor() {
-    // Inicializar con null
-    this.currentUserSubject = new BehaviorSubject<UsuarioResponse | null>(null);
+    // Inicializar con el usuario guardado en localStorage (si existe)
+    this.currentUserSubject = new BehaviorSubject<UsuarioResponse | null>(
+      this.getUserFromStorage()
+    );
     this.currentUser = this.currentUserSubject.asObservable();
 
     // Configurar instancia de Axios
     this.axios = axios.create({
       baseURL: this.apiUrl,
     });
-
     // Interceptor para añadir token JWT en cada solicitud
     this.axios.interceptors.request.use(config => {
-      const currentToken = this.getToken();
-      if (currentToken) {
-        config.headers['Authorization'] = `Bearer ${currentToken}`;
+      const token = this.getToken();
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
       }
       return config;
     });
@@ -68,22 +66,28 @@ export class LoginService {
     return this.currentUserSubject.value;
   }
 
-  // Obtener token JWT
+  // Obtener usuario del localStorage
+  private getUserFromStorage(): UsuarioResponse | null {
+    const storedUser = localStorage.getItem('usuario');
+    return storedUser ? JSON.parse(storedUser) : null;
+  }
+
+    // Obtener token JWT del localStorage
   public getToken(): string | null {
-    return this.token;
+    return localStorage.getItem('token');
   }  
 
-  // Guardar usuario y token 
+  // Guardar usuario y token en localStorage y actualizar BehaviorSubject
   private setUserData(user: UsuarioResponse, token: string): void {
-    this.token = token;
-    this.user = user;
+    localStorage.setItem('token', token);
+    localStorage.setItem('usuario', JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
 
   // Limpiar datos del usuario
   private clearUserData(): void {
-    this.token = null;
-    this.user = null;
+    localStorage.removeItem('usuario');
+    localStorage.removeItem('token');
     this.currentUserSubject.next(null);
   }
 
@@ -97,10 +101,10 @@ export class LoginService {
         // Obtener datos del cuerpo de la respuesta
         const tokenData = response.data;
         const userData = tokenData.usuario;
-        
+
         // Guardar datos del usuario y token
         this.setUserData(userData, tokenData.token);
-        
+
         return userData;
       }),
       catchError(error => {
@@ -123,6 +127,7 @@ export class LoginService {
 
   // Cerrar sesión
   logout(): Observable<void> {
+    // Aquí puedes considerar invalidar el token en el servidor si tienes un endpoint para eso
     this.clearUserData();
     return new Observable<void>(observer => {
       observer.next();

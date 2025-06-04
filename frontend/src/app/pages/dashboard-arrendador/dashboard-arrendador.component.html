@@ -77,9 +77,13 @@
           <input type="date" [(ngModel)]="fechaInicio" placeholder="Fecha de inicio" />
           <input type="date" [(ngModel)]="fechaFin" placeholder="Fecha de fin" />
         </div>
-    
+        <div class="form-row">
+          <label for="capacidadSolicitada">Cantidad de personas</label>
+          <input type="number" min="1" id="capacidadSolicitada" [(ngModel)]="capacidadSolicitada" placeholder="Personas a hospedar" />
+        </div>
+
         <button class="finca-btn" (click)="solicitarArriendo()">Solicitar arriendo</button>
-    
+
         <p *ngIf="solicitudEnviada" class="finca-solicitud-msg">
           Solicitud enviada con éxito. Esperando a que te acepten la solicitud
         </p>

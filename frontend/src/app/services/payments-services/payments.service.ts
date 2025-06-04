@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { environment } from '../../../environments/environment';
 import { Pago } from '../../models/pago.model';
+import { LoginService } from '../login_services/login.service';
 
 export interface PaymentCreateDTO {
   solicitudId: number;
@@ -22,7 +23,12 @@ export interface PaymentUpdateDTO {
 })
 export class PaymentService {
 
-  constructor() {}
+  constructor(private loginService: LoginService) {}
+
+  private getAuthHeaders() {
+  const token = this.loginService.getToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
 
   // Obtener un pago por ID
   getPagoById(id: number): Promise<Pago> {
@@ -46,13 +52,17 @@ export class PaymentService {
 
   // Crear nuevo pago
   createPago(pago: PaymentCreateDTO): Promise<Pago> {
-    return axios.post<Pago>(`${environment.apiUrl}/pagos/registrar`, pago)
-      .then(res => res.data)
-      .catch(err => {
-        console.error('Error al crear pago:', err);
-        throw err;
-      });
-  }
+  return axios.post<Pago>(
+    `${environment.apiUrl}/pagos/registrar`,
+    pago,
+    { headers: this.getAuthHeaders() }
+  )
+  .then(res => res.data)
+  .catch(err => {
+    console.error('Error al crear pago:', err);
+    throw err;
+  });
+}
   
   
 

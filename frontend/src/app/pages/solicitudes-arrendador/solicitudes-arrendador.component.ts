@@ -190,7 +190,7 @@ export class SolicitudesArrendadorComponent implements OnInit {
       
       this.solicitudesFiltradas = this.solicitudes.filter(
         solicitud => solicitud.estado === estadoFiltrado
-      );
+      ).sort((a, b) => new Date(a.fechaInicio).getTime() - new Date(b.fechaInicio).getTime());;
     }
   }
 
