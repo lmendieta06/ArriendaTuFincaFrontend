@@ -49,10 +49,11 @@
       </div>
 
       <button *ngIf="status !== 'RECHAZADA'"
-        [ngClass]="getButtonClass()"
+        [ngClass]="solicitudExpirada ? 'btn-expirada' : getButtonClass()"
         (click)="onActionClick($event)">
-        {{ getActionButtonLabel() }}
+          {{ solicitudExpirada ? 'Solicitud Expirada' : getActionButtonLabel() }}
       </button>
+
 
       
 

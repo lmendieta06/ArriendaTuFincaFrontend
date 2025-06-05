@@ -32,9 +32,8 @@ export class SolicitudCardArrendadorComponent {
 
    // Eventos
    @Output() verSolicitudEvent = new EventEmitter<number>();
-  @Output() hacerpagoEvent = new EventEmitter<number>();  
 
-  constructor(private solicitudService: SolicitudService, private router:Router, private route: ActivatedRoute) {}
+  constructor(private solicitudService: SolicitudService) {}
 
   ngOnInit():void {
     this.getData();
@@ -96,16 +95,6 @@ export class SolicitudCardArrendadorComponent {
     });
   }
 
-  approveRequest(event: Event): void {
-    event.stopPropagation();
-    this.updateEstadoSolicitud(EstadoSolicitud.APROBADA);
-  }
-
-  rejectRequest(event: Event): void {
-    event.stopPropagation();
-    this.updateEstadoSolicitud(EstadoSolicitud.RECHAZADA);
-  }
-
   getButtonClass(): string {
     switch (this.status) {
       case 'APROBADA': return 'approve-btn';
@@ -127,7 +116,14 @@ export class SolicitudCardArrendadorComponent {
         return ''; // En caso de RECHAZADA, ocultamos el botón
     }
   }
-  
+
+  get solicitudExpirada(): boolean {
+    if (this.solicitud?.calificacionArrendatario || this.solicitud?.calificacionPropiedad) {
+      return true; // Si ya hay calificaciones, está expirada
+    }
+    return false;
+  }
+
   shouldShowActionButton(): boolean {
     return this.status !== EstadoSolicitud.RECHAZADA;
   }

@@ -1,0 +1,120 @@
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.3);
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1000;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.modal-close {
+  position: absolute;
+  right: 15px;
+  top: 0;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: #a0601c;
+}
+
+
+.card {
+  background-color: #ffffff; /* fondo blanco */
+  border-radius: 14px;
+  padding: 24px;
+  width: 360px; /* más ancho */
+  min-height: 380px; /* más alto */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.contenido {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.nombre {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.star-rating {
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+
+.star {
+  font-size: 24px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.star.active {
+  color: #fbc02d;
+}
+
+
+.rating-text {
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: none;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #a05a18;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+button:hover {
+  background-color: #814d17;
+}
+
+.etiqueta {
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.calificada {
+  color: #555;
+  font-size: 13px;
+  margin-bottom: 10px;
+}

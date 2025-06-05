@@ -3,6 +3,8 @@ import { Usuario } from "./usuario.model";
 import { Propiedad } from "./propiedad.model";
 import { Pago } from "./pago.model";
 export class Solicitud {
+  calificacionPropiedad: any;
+  calificacionArrendatario: any;
     constructor(
         public id: number,
         public propiedad: Propiedad,

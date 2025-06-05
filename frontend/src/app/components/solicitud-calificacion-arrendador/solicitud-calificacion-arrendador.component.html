@@ -1,1 +1,46 @@
-<p>solicitud-calificacion-arrendador works!</p>
+<div class="modal" *ngIf="visible">
+  <div class="card">
+    <div class="modal-header">
+        <h2 *ngIf="etapa === 'finca'">Calificar Finca</h2>
+            <h2 *ngIf="etapa === 'arrendatario' && arrendatario">Calificar Arrendatario</h2>
+        <span class="modal-close" (click)="close()">&times;</span>
+    </div>
+
+    <div class="contenido">
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+
+      <div *ngIf="etapa === 'finca'">
+        <h4>Propiedad: {{ propiedad?.nombre || 'Nombre de la propiedad' }}</h4>
+        <div class="star-rating">
+          <span class="star" [ngClass]="{'active': rating >= 1}" (click)="setRating(1)">★</span>
+          <span class="star" [ngClass]="{'active': rating >= 2}" (click)="setRating(2)">★</span>
+          <span class="star" [ngClass]="{'active': rating >= 3}" (click)="setRating(3)">★</span>
+          <span class="star" [ngClass]="{'active': rating >= 4}" (click)="setRating(4)">★</span>
+          <span class="star" [ngClass]="{'active': rating >= 5}" (click)="setRating(5)">★</span>
+        </div>
+        <p class="rating-text">{{ getRatingText() }}</p>
+        <h4>Comentario:</h4>
+        <textarea [(ngModel)]="comentarioPropiedad" placeholder="Escribe un comentario sobre la finca..."></textarea>
+        <button (click)="enviarCalificacionPropiedad()">Enviar</button>
+      </div>
+
+      <div *ngIf="etapa === 'arrendatario' && arrendatario" class="arrendatario-card">
+        <h4>Arrendatario: {{ arrendatario?.nombre || 'Nombre del arrendatario' }}</h4>
+
+        <div class="star-rating">
+          <span class="star" [ngClass]="{'active': ratingArrendatario >= 1}" (click)="ratingArrendatario = 1">★</span>
+          <span class="star" [ngClass]="{'active': ratingArrendatario >= 2}" (click)="ratingArrendatario = 2">★</span>
+          <span class="star" [ngClass]="{'active': ratingArrendatario >= 3}" (click)="ratingArrendatario = 3">★</span>
+          <span class="star" [ngClass]="{'active': ratingArrendatario >= 4}" (click)="ratingArrendatario = 4">★</span>
+          <span class="star" [ngClass]="{'active': ratingArrendatario >= 5}" (click)="ratingArrendatario = 5">★</span>
+        </div>
+        <p class="rating-text">{{ getRatingText() }}</p>
+        <h4>Comentario:</h4>
+        <textarea [(ngModel)]="comentarioArrendatario" placeholder="Escribe un comentario sobre el arrendatario..."></textarea>
+        <button (click)="enviarCalificacionArrendatario()">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>

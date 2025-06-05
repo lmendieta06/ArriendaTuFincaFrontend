@@ -10,6 +10,7 @@ import { SolicitudService, SolicitudSimple, SolicitudUpdateDTO } from '../../ser
 import { LoginService } from '../../services/login_services/login.service';
 import { EstadoSolicitud } from '../../enums/estado_solicitud';
 import { PaymentCreateDTO } from '../../services/payments-services/payments.service';
+import { SolicitudCalificacionArrendadorComponent } from '../../components/solicitud-calificacion-arrendador/solicitud-calificacion-arrendador.component';
 
 interface FilterOptions {
   property: string;
@@ -27,7 +28,8 @@ interface FilterOptions {
     SolicitudCardArrendadorComponent,
     SolicitudDetailsArrendadorComponent,
     SolicitudPagosArrendadorComponent,
-    SolicitudCalificacionComponent
+    SolicitudCalificacionComponent, 
+    SolicitudCalificacionArrendadorComponent
   ],
   templateUrl: './solicitudes-arrendador.component.html',
   styleUrl: './solicitudes-arrendador.component.css'
@@ -45,6 +47,7 @@ export class SolicitudesArrendadorComponent implements OnInit {
   rechazadas: number = 0;
   modalTipo: string = ''; // puede ser 'detalles', 'calificacion', etc.
   EstadoSolicitud = EstadoSolicitud;
+  calificacionesRecibidas: number = 0; // Contador de calificaciones recibidas
 
 
 
@@ -323,9 +326,23 @@ export class SolicitudesArrendadorComponent implements OnInit {
   
 
   
+
+  onCalificacionEnviada(resultado: any): void {
+    console.log('Calificación enviada:', resultado);
+
+    this.calificacionesRecibidas++;
+
+    if (this.calificacionesRecibidas >= 2) {
+      this.cerrarModal();
+      this.calificacionesRecibidas = 0; // reset para futuros usos
+    }
+  }
+
+  
   cerrarModal(): void {
     this.showPaymentModal = false;
     this.showDetailsModal = false;
+    this.showCompletadaModal = false;
     this.modalTipo = '';
   }
 

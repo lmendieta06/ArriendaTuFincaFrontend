@@ -88,13 +88,13 @@
       (pagoRealizado)="onPagoRealizado($event)">
     </app-solicitud-pagos-arrendador>
 
-    <!--
-<app-solicitud-completada
-  *ngIf="modalTipo === 'completada'"
-  [solicitud]="selectedSolicitud"
-  (close)="showCompletadaModal = false">
-</app-solicitud-completada>
--->
-
+    <!-- Modal de Calificación -->
+    <app-solicitud-calificacion-arrendador
+      *ngIf="modalTipo === 'completada'"
+      [visible]="true"
+      [solicitudId]="selectedSolicitud?.id"
+      (closeEvent)="cerrarModal()"
+      (calificacionEnviada)="onCalificacionEnviada($event)">
+    </app-solicitud-calificacion-arrendador>
 
 </div>

@@ -167,10 +167,10 @@ export class SolicitudPagosArrendadorComponent implements OnInit, OnChanges {
 
 
 
-  close(): void {
-    this.visible = false;
-    this.closeEvent.emit();
-  }
+    close(): void {
+      this.visible = false;
+      this.closeEvent.emit();
+    }
   
     /**
      * Obtiene las iniciales del nombre
@@ -188,7 +188,6 @@ export class SolicitudPagosArrendadorComponent implements OnInit, OnChanges {
 
   
     procesarPago() {
-
       if (!this.valorIngresado || this.valorIngresado < this.property.price) {
         this.mensajePago = 'El monto ingresado es insuficiente.';
         return;
